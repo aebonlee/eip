@@ -1,10 +1,10 @@
 // 유튜브 강의 데이터
 
 export const lectureCategories = [
-  { id: 'written-theory', name: '필기 이론', icon: '📖' },
-  { id: 'practical-skill', name: '실기 실습', icon: '💻' },
-  { id: 'coding', name: '프로그래밍', icon: '⌨️' },
-  { id: 'tips', name: '합격 팁', icon: '🎯' },
+  { id: 'written-theory', name: '필기 이론', icon: 'fa-solid fa-book-open' },
+  { id: 'practical-skill', name: '실기 실습', icon: 'fa-solid fa-laptop-code' },
+  { id: 'coding', name: '프로그래밍', icon: 'fa-solid fa-code' },
+  { id: 'tips', name: '합격 팁', icon: 'fa-solid fa-bullseye' },
 ]
 
 export const lectures = [

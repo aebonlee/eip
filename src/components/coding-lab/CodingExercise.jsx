@@ -43,6 +43,7 @@ export default function CodingExercise() {
 
   const difficultyClass = { easy: 'difficulty-easy', medium: 'difficulty-medium', hard: 'difficulty-hard' }
   const difficultyLabel = { easy: '쉬움', medium: '보통', hard: '어려움' }
+  const cardDifficultyClass = { easy: 'card-difficulty-easy', medium: 'card-difficulty-medium', hard: 'card-difficulty-hard' }
 
   return (
     <>
@@ -75,7 +76,7 @@ export default function CodingExercise() {
         <div className="coding-layout">
           {/* 문제 설명 */}
           <div className="coding-problem">
-            <div className="card">
+            <div className={`card ${cardDifficultyClass[exercise.difficulty]}`}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <span className={`difficulty-badge ${difficultyClass[exercise.difficulty]}`}>
                   {difficultyLabel[exercise.difficulty]}

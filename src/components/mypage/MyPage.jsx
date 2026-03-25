@@ -41,7 +41,7 @@ export default function MyPage() {
     <>
       <div className="page-header">
         <div className="container page-header-inner">
-          <div className="page-header-icon">👤</div>
+          <div className="page-header-icon"><i className="fa-solid fa-user"></i></div>
           <div>
             <h1>마이페이지</h1>
             <p>학습 이력과 통계를 확인하세요</p>

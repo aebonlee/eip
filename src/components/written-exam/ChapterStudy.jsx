@@ -34,7 +34,7 @@ export default function ChapterStudy() {
       <>
         <div className="page-header">
           <div className="container page-header-inner">
-            <div className="page-header-icon">📖</div>
+            <div className="page-header-icon"><i className="fa-solid fa-book-open"></i></div>
             <div><h1>{subject.name}</h1></div>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function ChapterStudy() {
             <Link to="/written-exam">필기시험</Link> / <Link to={`/written-exam/${certType}`}>{cert.name}</Link> / {subject.name}
           </div>
           <div className="page-header-inner">
-            <div className="page-header-icon">📖</div>
+            <div className="page-header-icon"><i className="fa-solid fa-book-open"></i></div>
             <div><h1>{subject.name}</h1></div>
           </div>
         </div>

@@ -22,7 +22,7 @@ export default function SubjectList() {
             <Link to="/written-exam">필기시험</Link> / {cert.name}
           </div>
           <div className="page-header-inner">
-            <div className="page-header-icon">📝</div>
+            <div className="page-header-icon"><i className="fa-solid fa-file-pen"></i></div>
             <div>
               <h1>{cert.name}</h1>
               <p>{cert.description}</p>

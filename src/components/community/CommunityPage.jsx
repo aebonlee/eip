@@ -6,11 +6,9 @@ export default function CommunityPage() {
       {/* Page Header */}
       <div className="page-header">
         <div className="container">
-          <div className="page-header-content">
+          <div className="page-header-inner">
             <div className="page-header-icon">
-              <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+              <i className="fa-solid fa-users"></i>
             </div>
             <div>
               <h1>커뮤니티</h1>
@@ -38,9 +36,7 @@ export default function CommunityPage() {
             justifyContent: 'center',
             margin: '0 auto 24px',
           }}>
-            <svg width="40" height="40" fill="none" stroke="var(--primary)" viewBox="0 0 24 24" strokeWidth="1.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+            <i className="fa-solid fa-comments" style={{ fontSize: 36, color: 'var(--primary)' }}></i>
           </div>
 
           <h2 style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>
@@ -60,12 +56,14 @@ export default function CommunityPage() {
             margin: '0 auto',
           }}>
             {[
-              { icon: '💬', title: '질문 & 답변', desc: '학습 중 궁금한 점을 질문하세요' },
-              { icon: '📝', title: '시험 후기', desc: '시험 경험과 팁을 공유하세요' },
-              { icon: '👥', title: '스터디 모집', desc: '함께 공부할 동료를 찾아보세요' },
+              { icon: 'fa-solid fa-comments', title: '질문 & 답변', desc: '학습 중 궁금한 점을 질문하세요', color: '#3B82F6' },
+              { icon: 'fa-solid fa-clipboard-check', title: '시험 후기', desc: '시험 경험과 팁을 공유하세요', color: '#10B981' },
+              { icon: 'fa-solid fa-users', title: '스터디 모집', desc: '함께 공부할 동료를 찾아보세요', color: '#F59E0B' },
             ].map((item, i) => (
               <div key={i} className="card" style={{ padding: 24, textAlign: 'center' }}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>{item.icon}</div>
+                <div style={{ width: 56, height: 56, borderRadius: 12, background: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                  <i className={item.icon} style={{ fontSize: 24, color: 'white' }}></i>
+                </div>
                 <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</h4>
                 <p style={{ fontSize: 13, color: 'var(--text-light)' }}>{item.desc}</p>
               </div>

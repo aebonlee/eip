@@ -71,14 +71,14 @@ export default function HomePage() {
           <p className="section-subtitle">다양한 학습 도구로 효율적으로 공부하세요</p>
           <div className="features-grid">
             {[
-              { icon: '📝', title: '필기시험 학습', desc: '과목별 이론 정리와 CBT 모의시험으로 필기시험 완벽 대비', color: 'rgba(75, 139, 190, 0.12)' },
-              { icon: '💻', title: '실기시험 학습', desc: 'SQL, 알고리즘, 단답형 문제로 실기시험 실전 연습', color: 'rgba(16, 185, 129, 0.12)' },
-              { icon: '⌨️', title: '코딩 실습', desc: 'C, Java, Python 온라인 코드 에디터로 직접 코딩', color: 'rgba(6, 182, 212, 0.12)' },
-              { icon: '🎓', title: '온라인 강의', desc: '유튜브 강의를 카테고리별로 정리하여 제공', color: 'rgba(212, 160, 23, 0.12)' },
+              { icon: 'fa-solid fa-file-pen', title: '필기시험 학습', desc: '과목별 이론 정리와 CBT 모의시험으로 필기시험 완벽 대비', color: '#3B82F6' },
+              { icon: 'fa-solid fa-laptop-code', title: '실기시험 학습', desc: 'SQL, 알고리즘, 단답형 문제로 실기시험 실전 연습', color: '#10B981' },
+              { icon: 'fa-solid fa-code', title: '코딩 실습', desc: 'C, Java, Python 온라인 코드 에디터로 직접 코딩', color: '#06B6D4' },
+              { icon: 'fa-solid fa-graduation-cap', title: '온라인 강의', desc: '유튜브 강의를 카테고리별로 정리하여 제공', color: '#D97706' },
             ].map(f => (
               <div className="feature-card" key={f.title}>
-                <div className="feature-icon" style={{ background: f.color }}>
-                  {f.icon}
+                <div className="feature-icon" style={{ background: f.color, borderRadius: 12 }}>
+                  <i className={f.icon}></i>
                 </div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
@@ -95,13 +95,13 @@ export default function HomePage() {
           <p className="section-subtitle">목표 자격증을 선택하고 체계적으로 학습하세요</p>
           <div className="path-grid">
             {[
-              { title: '정보처리기사', desc: '4년제 졸업자 또는 관련 경력자를 위한 국가기술자격', tags: ['5과목', '필기+실기'], path: '/written-exam', color: 'rgba(75, 139, 190, 0.12)' },
-              { title: '정보처리산업기사', desc: '전문대 졸업자 또는 관련 경력자를 위한 산업기사', tags: ['4과목', '필기+실기'], path: '/written-exam', color: 'rgba(48, 105, 152, 0.12)' },
-              { title: '프로그래밍기능사', desc: '프로그래밍 기초를 위한 기능사 자격증', tags: ['필기', '실기(코딩)'], path: '/coding-lab', color: 'rgba(30, 79, 114, 0.12)' },
+              { title: '정보처리기사', desc: '4년제 졸업자 또는 관련 경력자를 위한 국가기술자격', tags: ['5과목', '필기+실기'], path: '/written-exam', icon: 'fa-solid fa-user-graduate', color: '#3B82F6' },
+              { title: '정보처리산업기사', desc: '전문대 졸업자 또는 관련 경력자를 위한 산업기사', tags: ['4과목', '필기+실기'], path: '/written-exam', icon: 'fa-solid fa-industry', color: '#2563EB' },
+              { title: '프로그래밍기능사', desc: '프로그래밍 기초를 위한 기능사 자격증', tags: ['필기', '실기(코딩)'], path: '/coding-lab', icon: 'fa-solid fa-keyboard', color: '#1D4ED8' },
             ].map(p => (
               <Link to={p.path} className="path-card" key={p.title}>
-                <div className="path-card-icon" style={{ background: p.color }}>
-                  🎯
+                <div className="path-card-icon" style={{ background: p.color, borderRadius: 12 }}>
+                  <i className={p.icon} style={{ color: 'white' }}></i>
                 </div>
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>

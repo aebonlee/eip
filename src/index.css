@@ -1,5 +1,6 @@
 /* EIP 정보처리 학습센터 - CSS Imports */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
 @import './styles/base.css';
 @import './styles/navbar.css';

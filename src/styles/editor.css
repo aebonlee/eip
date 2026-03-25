@@ -45,8 +45,8 @@
 }
 
 .editor-header-btn.active {
-  background: rgba(255, 212, 59, 0.3);
-  border-color: rgba(255, 212, 59, 0.5);
+  background: rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.5);
 }
 
 /* Run button */
@@ -186,8 +186,8 @@
   align-items: flex-start;
   gap: 16px;
   padding: 20px 24px;
-  background: rgba(48, 105, 152, 0.06);
-  border: 1px solid rgba(48, 105, 152, 0.12);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.12);
   border-radius: var(--radius-lg);
 }
 
@@ -195,7 +195,7 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-sm);
-  background: rgba(48, 105, 152, 0.12);
+  background: rgba(37, 99, 235, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;

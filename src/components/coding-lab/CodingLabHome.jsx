@@ -18,7 +18,7 @@ export default function CodingLabHome() {
     <>
       <div className="page-header">
         <div className="container page-header-inner">
-          <div className="page-header-icon">⌨️</div>
+          <div className="page-header-icon"><i className="fa-solid fa-code"></i></div>
           <div>
             <h1>코딩 실습</h1>
             <p>온라인 코드 에디터로 C, Java, Python 프로그래밍을 연습하세요</p>

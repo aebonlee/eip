@@ -13,7 +13,7 @@ export default function LecturesHome() {
     <>
       <div className="page-header">
         <div className="container page-header-inner">
-          <div className="page-header-icon">🎓</div>
+          <div className="page-header-icon"><i className="fa-solid fa-play-circle"></i></div>
           <div>
             <h1>온라인 강의실</h1>
             <p>유튜브 강의를 카테고리별로 모아 학습하세요</p>
@@ -36,7 +36,7 @@ export default function LecturesHome() {
               onClick={() => setActiveCategory(cat.id)}
               className={`category-filter-btn ${activeCategory === cat.id ? 'active' : ''}`}
             >
-              {cat.icon} {cat.name}
+              <i className={cat.icon} style={{ marginRight: 6 }}></i> {cat.name}
             </button>
           ))}
         </div>

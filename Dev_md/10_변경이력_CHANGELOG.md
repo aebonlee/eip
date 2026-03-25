@@ -203,9 +203,70 @@
 
 ---
 
+## v1.4.0 (2026-03-26) - UI 리디자인 (모던 컬러 + Font Awesome + 사이드바 레이아웃)
+
+### Phase 1: 컬러 팔레트 모던화 + Font Awesome CDN
+- Font Awesome 6 Free CDN 추가 (`index.css`에 `@import` 추가)
+- **컬러 토큰 전면 교체** (`base.css`):
+  - Primary: #306998 → `#2563EB` (모던 블루)
+  - Primary Dark: #1E4F72 → `#1D4ED8`
+  - Primary Light: #4B8BBE → `#3B82F6`
+  - Accent: #FFD43B → `#F59E0B` (차분한 앰버)
+  - Accent Dark: #E6B800 → `#D97706`, Accent Light: #FFE873 → `#FBBF24`
+  - bg-light: #F7F9FC → `#F8FAFC`, bg-medium: #E8EDF2 → `#E2E8F0`
+  - gradient-primary, gradient-hero, gradient-accent 모두 새 컬러 반영
+- **난이도 전용 CSS 변수** 추가 (easy/medium/hard에 대한 bg, text, border)
+- **타이포그래피**: body line-height 1.7→1.8, 제목 line-height 1.3→1.4
+- **rgba 하드코딩 일괄 교체**: `rgba(48, 105, 152, ...)` → `rgba(37, 99, 235, ...)`
+  - 대상: base.css, course.css, editor.css, navbar.css, mypage.css (총 22곳)
+- **accent rgba 교체**: `rgba(255, 212, 59, ...)` → `rgba(245, 158, 11, ...)`
+  - 대상: course.css, editor.css, navbar.css (총 7곳)
+
+### Phase 2: 이모지 → Font Awesome 아이콘 교체 (14파일)
+- **아이콘 매핑** (17종):
+  - 필기시험 📝 → `fa-file-pen` | 실기시험 💻 → `fa-laptop-code`
+  - 코딩 ⌨️ → `fa-code` | 강의 🎓 → `fa-graduation-cap` / `fa-play-circle`
+  - 기사 🎓 → `fa-user-graduate` | 산업기사 🏭 → `fa-industry` | 기능사 ⌨️ → `fa-keyboard`
+  - SQL 🗃️ → `fa-database` | 알고리즘 🧮 → `fa-diagram-project` | 단답형 ✏️ → `fa-pen`
+  - 이론학습 📖 → `fa-book-open` | Q&A 💬 → `fa-comments`
+  - 후기 📝 → `fa-clipboard-check` | 스터디 👥 → `fa-users` | 마이페이지 👤 → `fa-user`
+  - 합격 팁 🎯 → `fa-bullseye`
+- **JSX 렌더링**: `<i className="fa-solid fa-xxx"></i>` 형태로 교체
+- **아이콘 컨테이너**: 배경색 + 흰색 아이콘 스타일 적용
+- **수정 파일**: HomePage, WrittenExamHome, SubjectList, ChapterStudy, PracticalExamHome, SQLPractice, AlgorithmPractice, ShortAnswer, CodingLabHome, CodingExercise, LecturesHome, CommunityPage, MyPage, lectures-data.js
+
+### Phase 3: 실기 문제 풀이 — 사이드바 + 콘텐츠 레이아웃
+- `course.css`에 `.practice-layout` 관련 CSS 추가 (grid 280px + 1fr)
+  - `.practice-sidebar`: sticky, max-height, overflow-y auto
+  - `.practice-nav-item`: flex, hover/active 상태
+  - `.practice-nav-num`: 28px 원형 번호
+  - `.difficulty-dot`: 8px 원형 (easy=green, medium=amber, hard=red)
+  - 반응형: 1024px 이하 → 단일 컬럼
+- **적용 컴포넌트**: SQLPractice, AlgorithmPractice, ShortAnswer
+  - 기존 단일 quiz-container → 좌측 문제 목록 사이드바 + 우측 문제 풀이 콘텐츠
+
+### Phase 4: 난이도별 카드 색상 시스템
+- **새 카드 클래스** (`course.css`):
+  - `.card-difficulty-easy`: 초록 좌측 보더 + #ECFDF5→white 그라디언트
+  - `.card-difficulty-medium`: 앰버 좌측 보더 + #FFFBEB→white 그라디언트
+  - `.card-difficulty-hard`: 빨강 좌측 보더 + #FEF2F2→white 그라디언트
+- **난이도 배지 CSS 강화**: 각 레벨에 border 추가
+- **적용**: SQLPractice, AlgorithmPractice, CodingExercise의 문제 카드에 동적 클래스
+
+### Phase 5: 가독성 개선
+- `.quiz-question` line-height: 1.6 → 1.8
+- `.quiz-card` padding: 32px → 36px
+- `.lesson-content p` line-height 1.8 명시
+
+### 기타 수정
+- CommunityPage: `page-header-content` → `page-header-inner` (CSS 클래스 일치)
+- CommunityPage: 중앙 SVG 아이콘 → Font Awesome 교체
+
+---
+
 ## 향후 계획
 
-### v1.4.0 (예정)
+### v1.5.0 (예정)
 - [ ] 학습 진도 추적 기능 완성
 - [ ] 오답 노트 기능
 - [ ] 커뮤니티 기능 구현 (질문/답변, 시험 후기)

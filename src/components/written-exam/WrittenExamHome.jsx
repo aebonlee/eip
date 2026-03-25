@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { certTypes } from '../../data/written-exam-data'
 
-const certIcons = { engineer: '🎓', industrial: '🏭', functional: '⌨️' }
+const certIcons = { engineer: 'fa-solid fa-user-graduate', industrial: 'fa-solid fa-industry', functional: 'fa-solid fa-keyboard' }
 const certColors = {
-  engineer: 'rgba(75, 139, 190, 0.12)',
-  industrial: 'rgba(48, 105, 152, 0.12)',
-  functional: 'rgba(30, 79, 114, 0.12)',
+  engineer: '#3B82F6',
+  industrial: '#2563EB',
+  functional: '#1D4ED8',
 }
 
 export default function WrittenExamHome() {
@@ -13,7 +13,7 @@ export default function WrittenExamHome() {
     <>
       <div className="page-header">
         <div className="container page-header-inner">
-          <div className="page-header-icon">📝</div>
+          <div className="page-header-icon"><i className="fa-solid fa-file-pen"></i></div>
           <div>
             <h1>필기시험 학습</h1>
             <p>자격증을 선택하고 과목별 이론 학습과 CBT 모의시험을 시작하세요</p>
@@ -25,8 +25,8 @@ export default function WrittenExamHome() {
         <div className="cert-grid">
           {Object.values(certTypes).map(cert => (
             <Link key={cert.id} to={`/written-exam/${cert.id}`} className="cert-card">
-              <div className="cert-card-icon" style={{ background: certColors[cert.id] }}>
-                {certIcons[cert.id]}
+              <div className="cert-card-icon" style={{ background: certColors[cert.id], borderRadius: 12 }}>
+                <i className={certIcons[cert.id]} style={{ color: 'white' }}></i>
               </div>
               <h2>{cert.name}</h2>
               <p>{cert.description}</p>
