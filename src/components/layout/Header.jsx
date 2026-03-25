@@ -175,7 +175,11 @@ export default function Header() {
     }
     if (menuItem.sections) {
       return menuItem.sections.some(s =>
-        s.items.some(item => location.pathname.startsWith(item.path))
+        s.items.some(item => {
+          // 공유 경로(코딩실습/강의실)는 active 판정 제외
+          if (item.path.startsWith('/coding-lab') || item.path.startsWith('/lectures')) return false
+          return location.pathname.startsWith(item.path)
+        })
       )
     }
     if (menuItem.submenu) {
