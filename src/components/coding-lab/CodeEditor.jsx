@@ -1,20 +1,14 @@
 import { useState } from 'react'
 import Editor from '@monaco-editor/react'
 
-// Piston API (무료, 키 불필요)
-const PISTON_URL = 'https://emkc.org/api/v2/piston/execute'
+// Wandbox API (무료, 키 불필요, CORS 지원)
+const WANDBOX_URL = 'https://wandbox.org/api/compile.json'
 
-// Piston 언어 매핑
-const PISTON_LANGS = {
-  c: { language: 'c', version: '10.2.0' },
-  java: { language: 'java', version: '15.0.2' },
-  python: { language: 'python', version: '3.10.0' },
+const WANDBOX_COMPILERS = {
+  c: 'gcc-head',
+  java: 'openjdk-head',
+  python: 'cpython-head',
 }
-
-// Judge0 (선택, RapidAPI 키 필요)
-const JUDGE0_URL = import.meta.env.VITE_JUDGE0_API_URL
-const JUDGE0_KEY = import.meta.env.VITE_JUDGE0_API_KEY
-const useJudge0 = JUDGE0_KEY && JUDGE0_KEY !== 'your_judge0_api_key_here'
 
 export default function CodeEditor({ language, languageId, initialCode = '', input = '', onResult }) {
   const [code, setCode] = useState(initialCode)
@@ -22,85 +16,53 @@ export default function CodeEditor({ language, languageId, initialCode = '', inp
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState('')
 
-  const runWithPiston = async () => {
-    const langConfig = PISTON_LANGS[language] || PISTON_LANGS.python
-
-    const response = await fetch(PISTON_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        language: langConfig.language,
-        version: langConfig.version,
-        files: [{ content: code }],
-        stdin: input,
-      }),
-    })
-
-    const result = await response.json()
-
-    if (result.run) {
-      if (result.run.stderr) {
-        setError(result.run.stderr)
-      } else if (result.run.output) {
-        const out = result.run.output.replace(/\n$/, '')
-        setOutput(out)
-        onResult?.(out)
-      } else {
-        setOutput('(출력 없음)')
-      }
-    } else if (result.compile && result.compile.stderr) {
-      setError(result.compile.stderr)
-    } else if (result.message) {
-      setError(result.message)
-    } else {
-      setOutput('(출력 없음)')
-    }
-  }
-
-  const runWithJudge0 = async () => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'X-RapidAPI-Key': JUDGE0_KEY,
-      'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
-    }
-
-    const response = await fetch(`${JUDGE0_URL}/submissions?base64_encoded=true&wait=true`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        source_code: btoa(unescape(encodeURIComponent(code))),
-        language_id: languageId,
-        stdin: btoa(unescape(encodeURIComponent(input))),
-      }),
-    })
-
-    const result = await response.json()
-
-    if (result.stdout) {
-      const decoded = decodeURIComponent(escape(atob(result.stdout)))
-      setOutput(decoded)
-      onResult?.(decoded)
-    } else if (result.stderr) {
-      setError(decodeURIComponent(escape(atob(result.stderr))))
-    } else if (result.compile_output) {
-      setError(decodeURIComponent(escape(atob(result.compile_output))))
-    } else if (result.message) {
-      setError(result.message)
-    } else {
-      setOutput('(출력 없음)')
-    }
-  }
-
   const runCode = async () => {
     setIsRunning(true)
     setOutput('')
     setError('')
 
     try {
-      if (useJudge0) {
-        await runWithJudge0()
+      let codeToRun = code
+
+      // Wandbox는 Java 파일명이 prog.java → class명을 prog로 변환
+      if (language === 'java') {
+        codeToRun = code.replace(/public\s+class\s+\w+/, 'public class prog')
+      }
+
+      const compiler = WANDBOX_COMPILERS[language] || WANDBOX_COMPILERS.python
+
+      const response = await fetch(WANDBOX_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: codeToRun,
+          compiler,
+          stdin: input,
+          save: false,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`서버 오류 (${response.status})`)
+      }
+
+      const result = await response.json()
+
+      if (result.compiler_error) {
+        setError(result.compiler_error)
+      } else if (result.program_error) {
+        const out = result.program_output || ''
+        if (out) {
+          setOutput(out.replace(/\n$/, ''))
+          onResult?.(out.replace(/\n$/, ''))
+        }
+        setError(result.program_error)
+      } else if (result.program_output !== undefined) {
+        const out = result.program_output.replace(/\n$/, '')
+        setOutput(out || '(출력 없음)')
+        onResult?.(out)
       } else {
-        await runWithPiston()
+        setOutput('(출력 없음)')
       }
     } catch (err) {
       setError(`실행 오류: ${err.message}`)
