@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom'
 
 export default function Footer() {
   const quickLinks = [
+    { path: '/cert-intro', label: '자격증 소개' },
     { path: '/written-exam', label: '필기시험' },
     { path: '/practical-exam', label: '실기시험' },
     { path: '/coding-lab', label: '코딩실습' },
     { path: '/lectures', label: '강의실' },
-    { path: '/mypage', label: '마이페이지' },
-    { path: '/login', label: '로그인' },
+    { path: '/community', label: '커뮤니티' },
   ]
 
   const familySites = [
@@ -69,7 +69,7 @@ export default function Footer() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                 </svg>
-                <a href="mailto:info@dreamitbiz.com">info@dreamitbiz.com</a>
+                <a href="mailto:aebon@dreamitbiz.com">aebon@dreamitbiz.com</a>
               </li>
               <li>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -79,13 +79,19 @@ export default function Footer() {
               </li>
               <li>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
                 </svg>
-                <span>학습 목적으로 제작된 사이트입니다</span>
+                <span>카카오톡 ID: aebon</span>
               </li>
               <li>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>평일 09:00 ~ 18:00</span>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <span>한국산업인력공단과 무관합니다</span>
               </li>

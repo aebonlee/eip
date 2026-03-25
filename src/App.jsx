@@ -18,6 +18,8 @@ import CodingExercise from './components/coding-lab/CodingExercise'
 import LecturesHome from './components/lectures/LecturesHome'
 import LecturePlayer from './components/lectures/LecturePlayer'
 import MyPage from './components/mypage/MyPage'
+import CertIntroPage from './components/cert/CertIntroPage'
+import CommunityPage from './components/community/CommunityPage'
 
 function App() {
   return (
@@ -48,6 +50,12 @@ function App() {
           {/* 강의실 */}
           <Route path="lectures" element={<LecturesHome />} />
           <Route path="lectures/:id" element={<LecturePlayer />} />
+
+          {/* 자격증 소개 */}
+          <Route path="cert-intro" element={<CertIntroPage />} />
+
+          {/* 커뮤니티 */}
+          <Route path="community" element={<CommunityPage />} />
 
           {/* 마이페이지 */}
           <Route path="mypage" element={<MyPage />} />
