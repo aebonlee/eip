@@ -52,49 +52,71 @@ const { data, error } = await supabase
 
 ---
 
-## 2. Judge0 API 연동 (코드 실행)
+## 2. Wandbox API 연동 (코드 실행)
+
+> **이전**: Judge0 API (RapidAPI, 유료) → Piston API (무료, 2026/2/15부터 화이트리스트 전용)
+> **현재**: Wandbox API (무료, API 키 불필요, CORS 지원)
 
 ### 엔드포인트
-- **Base URL**: `https://judge0-ce.p.rapidapi.com`
-- **코드 제출**: `POST /submissions?base64_encoded=true&wait=true`
-
-### 요청 헤더
-```javascript
-headers: {
-  'Content-Type': 'application/json',
-  'X-RapidAPI-Key': import.meta.env.VITE_JUDGE0_API_KEY,
-  'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
-}
-```
+- **URL**: `https://wandbox.org/api/compile.json`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
 
 ### 요청 본문
 ```javascript
-body: {
-  source_code: btoa(unescape(encodeURIComponent(code))),  // base64 인코딩
-  language_id: 50,  // C=50, Java=62, Python=71
-  stdin: btoa(unescape(encodeURIComponent(input))),        // 입력값
+{
+  code: '소스코드 문자열',
+  compiler: 'gcc-head',       // 컴파일러 선택
+  stdin: '표준입력 문자열',    // 입력값 (선택)
+  save: false,                 // 코드 저장 여부
+}
+```
+
+### 컴파일러 매핑
+| 언어 | Wandbox 컴파일러 | Monaco Editor ID |
+|------|-----------------|-----------------|
+| C (GCC) | `gcc-head` | `c` |
+| Java (OpenJDK) | `openjdk-head` | `java` |
+| Python 3 | `cpython-head` | `python` |
+
+### Java 특수 처리
+Wandbox에서 Java 파일명은 `prog.java`로 고정되므로, class명을 `prog`로 변환해야 합니다.
+```javascript
+if (language === 'java') {
+  codeToRun = code.replace(/public\s+class\s+\w+/, 'public class prog')
 }
 ```
 
 ### 응답 처리
 | 필드 | 설명 |
 |------|------|
-| `stdout` | 표준 출력 (base64) |
-| `stderr` | 에러 출력 (base64) |
-| `compile_output` | 컴파일 에러 (base64) |
-| `status.id` | 3=성공, 4=오답, 5=시간초과, 6=컴파일에러 |
+| `program_output` | 프로그램 표준 출력 |
+| `program_error` | 런타임 에러 출력 |
+| `compiler_error` | 컴파일 에러 메시지 |
+| `compiler_output` | 컴파일러 표준 출력 |
+| `status` | 종료 코드 (0=성공) |
 
-### 언어 ID 매핑
-| 언어 | Language ID | Monaco ID |
-|------|------------|-----------|
-| C (GCC) | 50 | `c` |
-| Java (OpenJDK) | 62 | `java` |
-| Python 3 | 71 | `python` |
+### 사용 예시
+```javascript
+const response = await fetch('https://wandbox.org/api/compile.json', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    code: '#include <stdio.h>\nint main() { printf("Hello"); return 0; }',
+    compiler: 'gcc-head',
+    stdin: '',
+    save: false,
+  }),
+})
+const result = await response.json()
+// result.program_output → "Hello"
+```
 
-### 무료 플랜 제한
-- 일일 50회 요청 (RapidAPI Basic)
-- 실행 시간 제한: 5초
-- 메모리 제한: 128MB
+### Wandbox API 특징
+- 무료, API 키 불필요
+- CORS 지원 (프론트엔드에서 직접 호출 가능)
+- 다양한 컴파일러 버전 지원
+- 요청 제한: 명시적 제한 없으나, 과도한 사용 시 차단 가능
 
 ---
 
