@@ -152,6 +152,17 @@
   pointer-events: auto;
 }
 
+/* Bridge: invisible hover area above dropdown to prevent gap */
+.nav-dropdown.show::before,
+.nav-mega.show::before {
+  content: '';
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 16px;
+}
+
 .nav-dropdown-simple {
   min-width: 240px;
   background: var(--bg-white);

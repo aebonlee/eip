@@ -1,15 +1,19 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { sqlQuestions } from '../../data/practical-exam-data'
+import { Link, useParams } from 'react-router-dom'
+import { getSQLQuestions, getCertName } from '../../data/practical-exam-data'
 
 export default function SQLPractice() {
+  const { certType = 'engineer' } = useParams()
+  const certName = getCertName(certType)
+  const questions = getSQLQuestions(certType)
+
   const [currentQ, setCurrentQ] = useState(0)
   const [userAnswer, setUserAnswer] = useState('')
   const [showResult, setShowResult] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [showHint, setShowHint] = useState(false)
 
-  const q = sqlQuestions[currentQ]
+  const q = questions[currentQ]
 
   const checkAnswer = () => {
     const normalize = (s) => s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/;$/, '')
@@ -43,10 +47,10 @@ export default function SQLPractice() {
       <div className="page-header">
         <div className="container">
           <div className="page-header-breadcrumb">
-            <Link to="/practical-exam">실기시험</Link> / SQL 실습
+            <Link to={`/practical-exam/${certType}`}>{certName} 실기시험</Link> / SQL 실습
           </div>
           <div className="page-header-inner">
-            <div className="page-header-icon">🗃️</div>
+            <div className="page-header-icon">{'\u{1F5C3}\uFE0F'}</div>
             <div><h1>SQL 실습</h1></div>
           </div>
         </div>
@@ -55,7 +59,7 @@ export default function SQLPractice() {
       <div className="quiz-container">
         {/* 문제 번호 */}
         <div className="quiz-question-number">
-          {sqlQuestions.map((_, idx) => (
+          {questions.map((_, idx) => (
             <button
               key={idx}
               onClick={() => goTo(idx)}
@@ -129,7 +133,7 @@ export default function SQLPractice() {
             <button className="lesson-nav-btn" disabled={currentQ === 0} onClick={() => goTo(currentQ - 1)}>
               &#8592; 이전
             </button>
-            <button className="lesson-nav-btn" disabled={currentQ === sqlQuestions.length - 1} onClick={() => goTo(currentQ + 1)}>
+            <button className="lesson-nav-btn" disabled={currentQ === questions.length - 1} onClick={() => goTo(currentQ + 1)}>
               다음 &#8594;
             </button>
           </div>

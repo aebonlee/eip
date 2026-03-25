@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -31,9 +31,9 @@ const megaMenuData = [
       {
         title: '실기시험',
         items: [
-          { label: 'SQL 실습', path: '/practical-exam/sql' },
-          { label: '알고리즘', path: '/practical-exam/algorithm' },
-          { label: '단답형 연습', path: '/practical-exam/short-answer' },
+          { label: 'SQL 실습', path: '/practical-exam/engineer/sql' },
+          { label: '알고리즘', path: '/practical-exam/engineer/algorithm' },
+          { label: '단답형 연습', path: '/practical-exam/engineer/short-answer' },
         ],
       },
       {
@@ -69,9 +69,9 @@ const megaMenuData = [
       {
         title: '실기시험',
         items: [
-          { label: 'SQL 실습', path: '/practical-exam/sql' },
-          { label: '알고리즘', path: '/practical-exam/algorithm' },
-          { label: '단답형 연습', path: '/practical-exam/short-answer' },
+          { label: 'SQL 실습', path: '/practical-exam/industrial/sql' },
+          { label: '알고리즘', path: '/practical-exam/industrial/algorithm' },
+          { label: '단답형 연습', path: '/practical-exam/industrial/short-answer' },
         ],
       },
       {
@@ -106,9 +106,9 @@ const megaMenuData = [
       {
         title: '실기시험',
         items: [
-          { label: 'SQL 실습', path: '/practical-exam/sql' },
-          { label: '알고리즘', path: '/practical-exam/algorithm' },
-          { label: '단답형 연습', path: '/practical-exam/short-answer' },
+          { label: 'SQL 실습', path: '/practical-exam/functional/sql' },
+          { label: '알고리즘', path: '/practical-exam/functional/algorithm' },
+          { label: '단답형 연습', path: '/practical-exam/functional/short-answer' },
         ],
       },
       {
@@ -184,13 +184,21 @@ export default function Header() {
     return false
   }
 
-  const handleMenuEnter = (idx) => {
-    setActiveMenu(idx)
-  }
+  const menuTimeoutRef = useRef(null)
 
-  const handleMenuLeave = () => {
-    setActiveMenu(null)
-  }
+  const handleMenuEnter = useCallback((idx) => {
+    if (menuTimeoutRef.current) {
+      clearTimeout(menuTimeoutRef.current)
+      menuTimeoutRef.current = null
+    }
+    setActiveMenu(idx)
+  }, [])
+
+  const handleMenuLeave = useCallback(() => {
+    menuTimeoutRef.current = setTimeout(() => {
+      setActiveMenu(null)
+    }, 200)
+  }, [])
 
   const toggleMobileSubmenu = (idx) => {
     setMobileExpanded(mobileExpanded === idx ? null : idx)

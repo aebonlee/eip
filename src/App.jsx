@@ -39,9 +39,10 @@ function App() {
 
           {/* 실기시험 */}
           <Route path="practical-exam" element={<PracticalExamHome />} />
-          <Route path="practical-exam/sql" element={<SQLPractice />} />
-          <Route path="practical-exam/algorithm" element={<AlgorithmPractice />} />
-          <Route path="practical-exam/short-answer" element={<ShortAnswer />} />
+          <Route path="practical-exam/:certType" element={<PracticalExamHome />} />
+          <Route path="practical-exam/:certType/sql" element={<SQLPractice />} />
+          <Route path="practical-exam/:certType/algorithm" element={<AlgorithmPractice />} />
+          <Route path="practical-exam/:certType/short-answer" element={<ShortAnswer />} />
 
           {/* 코딩실습 */}
           <Route path="coding-lab" element={<CodingLabHome />} />

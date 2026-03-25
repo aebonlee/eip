@@ -86,9 +86,9 @@ export default function CodeEditor({ language, languageId, initialCode = '', inp
             <button className="editor-header-btn" onClick={() => setCode(initialCode)}>초기화</button>
           </div>
         </div>
-        <div style={{ minHeight: 300 }}>
+        <div>
           <Editor
-            height="300px"
+            height={`${Math.max(300, (code.split('\n').length + 2) * 20)}px`}
             language={language}
             value={code}
             onChange={setCode}

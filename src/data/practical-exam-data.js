@@ -1,5 +1,37 @@
 // 실기시험 데이터
 
+const certNames = {
+  engineer: '정보처리기사',
+  industrial: '정보처리산업기사',
+  functional: '프로그래밍기능사',
+}
+
+const certDifficultyMap = {
+  engineer: ['easy', 'medium', 'hard'],
+  industrial: ['easy', 'medium'],
+  functional: ['easy'],
+}
+
+export function getCertName(certType) {
+  return certNames[certType] || certNames.engineer
+}
+
+export function getSQLQuestions(certType) {
+  const allowed = certDifficultyMap[certType] || certDifficultyMap.engineer
+  return sqlQuestions.filter(q => allowed.includes(q.difficulty))
+}
+
+export function getAlgorithmQuestions(certType) {
+  const allowed = certDifficultyMap[certType] || certDifficultyMap.engineer
+  return algorithmQuestions.filter(q => allowed.includes(q.difficulty))
+}
+
+export function getShortAnswerQuestions(certType) {
+  if (certType === 'functional') return shortAnswerQuestions.slice(0, 10)
+  if (certType === 'industrial') return shortAnswerQuestions.slice(0, 20)
+  return shortAnswerQuestions
+}
+
 export const sqlQuestions = [
   {
     id: 'sql-1',

@@ -1,9 +1,13 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { shortAnswerQuestions } from '../../data/practical-exam-data'
+import { Link, useParams } from 'react-router-dom'
+import { getShortAnswerQuestions, getCertName } from '../../data/practical-exam-data'
 import ProgressBar from '../ui/ProgressBar'
 
 export default function ShortAnswer() {
+  const { certType = 'engineer' } = useParams()
+  const certName = getCertName(certType)
+  const questions = getShortAnswerQuestions(certType)
+
   const [currentQ, setCurrentQ] = useState(0)
   const [userAnswer, setUserAnswer] = useState('')
   const [showResult, setShowResult] = useState(false)
@@ -12,7 +16,7 @@ export default function ShortAnswer() {
   const [correctCount, setCorrectCount] = useState(0)
   const [attempted, setAttempted] = useState(0)
 
-  const q = shortAnswerQuestions[currentQ]
+  const q = questions[currentQ]
 
   const checkAnswer = () => {
     const normalize = (s) => s.trim().toLowerCase().replace(/\s+/g, '')
@@ -39,10 +43,10 @@ export default function ShortAnswer() {
       <div className="page-header">
         <div className="container">
           <div className="page-header-breadcrumb">
-            <Link to="/practical-exam">실기시험</Link> / 단답형 연습
+            <Link to={`/practical-exam/${certType}`}>{certName} 실기시험</Link> / 단답형 연습
           </div>
           <div className="page-header-inner">
-            <div className="page-header-icon">✏️</div>
+            <div className="page-header-icon">{'\u270F\uFE0F'}</div>
             <div><h1>단답형 연습</h1></div>
           </div>
         </div>
@@ -51,11 +55,11 @@ export default function ShortAnswer() {
       <div className="quiz-container">
         {/* 진행 상황 */}
         <div style={{ marginBottom: 24 }}>
-          <ProgressBar value={attempted} max={shortAnswerQuestions.length} label={`${correctCount}/${attempted} 정답`} />
+          <ProgressBar value={attempted} max={questions.length} label={`${correctCount}/${attempted} 정답`} />
         </div>
 
         <div className="quiz-question-number">
-          {shortAnswerQuestions.map((_, idx) => (
+          {questions.map((_, idx) => (
             <button
               key={idx}
               onClick={() => goTo(idx)}
@@ -69,7 +73,7 @@ export default function ShortAnswer() {
         <div className="quiz-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <span className="topic-tag">{q.category}</span>
-            <span style={{ fontSize: 14, color: 'var(--text-light)' }}>문제 {currentQ + 1}/{shortAnswerQuestions.length}</span>
+            <span style={{ fontSize: 14, color: 'var(--text-light)' }}>문제 {currentQ + 1}/{questions.length}</span>
           </div>
 
           <p className="quiz-question" style={{ whiteSpace: 'pre-line' }}>{q.question}</p>
@@ -117,7 +121,7 @@ export default function ShortAnswer() {
             <button className="lesson-nav-btn" disabled={currentQ === 0} onClick={() => goTo(currentQ - 1)}>
               &#8592; 이전
             </button>
-            <button className="lesson-nav-btn" disabled={currentQ === shortAnswerQuestions.length - 1} onClick={() => goTo(currentQ + 1)}>
+            <button className="lesson-nav-btn" disabled={currentQ === questions.length - 1} onClick={() => goTo(currentQ + 1)}>
               다음 &#8594;
             </button>
           </div>

@@ -2,6 +2,17 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { certTypes, chapters } from '../../data/written-exam-data'
 
+// 인라인 **bold** 마크다운을 <strong>으로 변환
+function renderInlineMarkdown(text) {
+  const parts = text.split(/(\*\*.*?\*\*)/)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} style={{ color: 'var(--text-primary)' }}>{part.slice(2, -2)}</strong>
+    }
+    return part
+  })
+}
+
 export default function ChapterStudy() {
   const { certType, subjectId } = useParams()
   const cert = certTypes[certType]
@@ -92,27 +103,21 @@ export default function ChapterStudy() {
             <div>
               {current.content?.split('\n').map((line, i) => {
                 if (line.startsWith('## ')) {
-                  return <h2 key={i}>{line.replace('## ', '')}</h2>
+                  return <h2 key={i}>{renderInlineMarkdown(line.replace('## ', ''))}</h2>
                 }
                 if (line.startsWith('### ')) {
-                  return <h3 key={i}>{line.replace('### ', '')}</h3>
-                }
-                if (line.startsWith('- **')) {
-                  const match = line.match(/- \*\*(.+?)\*\*:?\s*(.*)/)
-                  if (match) {
-                    return (
-                      <p key={i} style={{ marginLeft: 16, marginBottom: 4, color: 'var(--text-secondary)' }}>
-                        <strong style={{ color: 'var(--text-primary)' }}>{match[1]}</strong>
-                        {match[2] && `: ${match[2]}`}
-                      </p>
-                    )
-                  }
+                  return <h3 key={i}>{renderInlineMarkdown(line.replace('### ', ''))}</h3>
                 }
                 if (line.startsWith('- ')) {
-                  return <p key={i} style={{ marginLeft: 16, marginBottom: 4, color: 'var(--text-secondary)' }}>&#8226; {line.replace('- ', '')}</p>
+                  const text = line.slice(2)
+                  return (
+                    <p key={i} style={{ marginLeft: 16, marginBottom: 4, color: 'var(--text-secondary)' }}>
+                      &#8226; {renderInlineMarkdown(text)}
+                    </p>
+                  )
                 }
                 if (line.trim() === '') return <div key={i} style={{ height: 8 }} />
-                return <p key={i} style={{ marginBottom: 8, color: 'var(--text-secondary)' }}>{line}</p>
+                return <p key={i} style={{ marginBottom: 8, color: 'var(--text-secondary)' }}>{renderInlineMarkdown(line)}</p>
               })}
             </div>
 

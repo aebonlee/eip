@@ -1,15 +1,19 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { algorithmQuestions } from '../../data/practical-exam-data'
+import { Link, useParams } from 'react-router-dom'
+import { getAlgorithmQuestions, getCertName } from '../../data/practical-exam-data'
 
 export default function AlgorithmPractice() {
+  const { certType = 'engineer' } = useParams()
+  const certName = getCertName(certType)
+  const questions = getAlgorithmQuestions(certType)
+
   const [currentQ, setCurrentQ] = useState(0)
   const [userAnswer, setUserAnswer] = useState('')
   const [showResult, setShowResult] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [showHint, setShowHint] = useState(false)
 
-  const q = algorithmQuestions[currentQ]
+  const q = questions[currentQ]
 
   const checkAnswer = () => {
     const normalize = (s) => s.trim().toLowerCase().replace(/\s+/g, ' ')
@@ -36,10 +40,10 @@ export default function AlgorithmPractice() {
       <div className="page-header">
         <div className="container">
           <div className="page-header-breadcrumb">
-            <Link to="/practical-exam">실기시험</Link> / 알고리즘 실습
+            <Link to={`/practical-exam/${certType}`}>{certName} 실기시험</Link> / 알고리즘 실습
           </div>
           <div className="page-header-inner">
-            <div className="page-header-icon">🧮</div>
+            <div className="page-header-icon">{'\u{1F9EE}'}</div>
             <div><h1>알고리즘 실습</h1></div>
           </div>
         </div>
@@ -47,7 +51,7 @@ export default function AlgorithmPractice() {
 
       <div className="quiz-container">
         <div className="quiz-question-number">
-          {algorithmQuestions.map((_, idx) => (
+          {questions.map((_, idx) => (
             <button
               key={idx}
               onClick={() => goTo(idx)}
@@ -111,7 +115,7 @@ export default function AlgorithmPractice() {
             <button className="lesson-nav-btn" disabled={currentQ === 0} onClick={() => goTo(currentQ - 1)}>
               &#8592; 이전
             </button>
-            <button className="lesson-nav-btn" disabled={currentQ === algorithmQuestions.length - 1} onClick={() => goTo(currentQ + 1)}>
+            <button className="lesson-nav-btn" disabled={currentQ === questions.length - 1} onClick={() => goTo(currentQ + 1)}>
               다음 &#8594;
             </button>
           </div>
