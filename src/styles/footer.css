@@ -1,10 +1,15 @@
-/* ===== Footer ===== */
+/* ============================================
+   Footer - Gradient Dark (python-study 참고 디자인)
+   ============================================ */
+
 .footer {
   background: linear-gradient(180deg, #111827 0%, #0A0F1A 100%);
   color: rgba(255, 255, 255, 0.7);
   padding: 60px 0 32px;
+  position: relative;
 }
 
+/* Grid: 3 columns */
 .footer-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1.2fr;
@@ -12,12 +17,19 @@
   margin-bottom: 40px;
 }
 
-/* Brand */
+/* Brand / Logo */
+.footer-brand p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
 .footer-logo {
   font-size: 26px;
   font-weight: 800;
+  margin-bottom: 14px;
   color: #fff;
-  margin-bottom: 16px;
 }
 
 .footer-logo .brand-eip {
@@ -29,54 +41,74 @@
 }
 
 .footer-desc {
-  font-size: 14px;
-  line-height: 1.8;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 20px;
+  line-height: 1.7;
 }
 
-/* Family sites */
+/* Family Site */
+.footer-family {
+  margin-top: 16px;
+}
+
 .footer-family select {
+  width: 100%;
+  max-width: 220px;
+  padding: 8px 12px;
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  padding: 8px 12px;
   font-size: 13px;
   cursor: pointer;
-  outline: none;
+  appearance: auto;
 }
 
 .footer-family select:hover {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Sections */
-.footer-section h4 {
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  letter-spacing: -0.01em;
+.footer-family select option {
+  background: #1f2937;
+  color: #e5e7eb;
 }
 
+/* Section Heading */
+.footer-heading {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+/* Quick Links */
 .footer-quick-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
 .footer-quick-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  transition: var(--transition);
+  transition: color 0.2s;
+  line-height: 1.6;
 }
 
 .footer-quick-links a:hover {
   color: #93C5FD;
 }
 
+/* Contact */
 .footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -86,39 +118,40 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
 }
 
-.footer-contact svg {
-  width: 16px;
-  height: 16px;
+.footer-contact li svg {
   flex-shrink: 0;
-  opacity: 0.5;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .footer-contact a {
-  color: rgba(255, 255, 255, 0.6);
-  transition: var(--transition);
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
 .footer-contact a:hover {
   color: #93C5FD;
 }
 
-/* Bottom */
+/* Bottom Bar */
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
   padding-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
 }
 
 .footer-meta {
+  margin-top: 6px;
   font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.8;
 }
 
 /* Back to top */
@@ -135,19 +168,10 @@
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-lg);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
   transition: var(--transition);
-  z-index: 999;
+  z-index: 100;
   border: none;
   cursor: pointer;
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
 }
 
 .back-to-top:hover {
@@ -156,25 +180,27 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 @media (max-width: 768px) {
+  .footer {
+    padding: 40px 0 24px;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 32px;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
-
   .footer-quick-links {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-quick-links {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-meta {
+    font-size: 11px;
   }
 }

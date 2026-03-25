@@ -1,8 +1,20 @@
 import { useState } from 'react'
 import Editor from '@monaco-editor/react'
 
-const JUDGE0_URL = import.meta.env.VITE_JUDGE0_API_URL || 'https://judge0-ce.p.rapidapi.com'
+// Piston API (무료, 키 불필요)
+const PISTON_URL = 'https://emkc.org/api/v2/piston/execute'
+
+// Piston 언어 매핑
+const PISTON_LANGS = {
+  c: { language: 'c', version: '10.2.0' },
+  java: { language: 'java', version: '15.0.2' },
+  python: { language: 'python', version: '3.10.0' },
+}
+
+// Judge0 (선택, RapidAPI 키 필요)
+const JUDGE0_URL = import.meta.env.VITE_JUDGE0_API_URL
 const JUDGE0_KEY = import.meta.env.VITE_JUDGE0_API_KEY
+const useJudge0 = JUDGE0_KEY && JUDGE0_KEY !== 'your_judge0_api_key_here'
 
 export default function CodeEditor({ language, languageId, initialCode = '', input = '', onResult }) {
   const [code, setCode] = useState(initialCode)
@@ -10,42 +22,85 @@ export default function CodeEditor({ language, languageId, initialCode = '', inp
   const [isRunning, setIsRunning] = useState(false)
   const [error, setError] = useState('')
 
+  const runWithPiston = async () => {
+    const langConfig = PISTON_LANGS[language] || PISTON_LANGS.python
+
+    const response = await fetch(PISTON_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: langConfig.language,
+        version: langConfig.version,
+        files: [{ content: code }],
+        stdin: input,
+      }),
+    })
+
+    const result = await response.json()
+
+    if (result.run) {
+      if (result.run.stderr) {
+        setError(result.run.stderr)
+      } else if (result.run.output) {
+        const out = result.run.output.replace(/\n$/, '')
+        setOutput(out)
+        onResult?.(out)
+      } else {
+        setOutput('(출력 없음)')
+      }
+    } else if (result.compile && result.compile.stderr) {
+      setError(result.compile.stderr)
+    } else if (result.message) {
+      setError(result.message)
+    } else {
+      setOutput('(출력 없음)')
+    }
+  }
+
+  const runWithJudge0 = async () => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': JUDGE0_KEY,
+      'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
+    }
+
+    const response = await fetch(`${JUDGE0_URL}/submissions?base64_encoded=true&wait=true`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        source_code: btoa(unescape(encodeURIComponent(code))),
+        language_id: languageId,
+        stdin: btoa(unescape(encodeURIComponent(input))),
+      }),
+    })
+
+    const result = await response.json()
+
+    if (result.stdout) {
+      const decoded = decodeURIComponent(escape(atob(result.stdout)))
+      setOutput(decoded)
+      onResult?.(decoded)
+    } else if (result.stderr) {
+      setError(decodeURIComponent(escape(atob(result.stderr))))
+    } else if (result.compile_output) {
+      setError(decodeURIComponent(escape(atob(result.compile_output))))
+    } else if (result.message) {
+      setError(result.message)
+    } else {
+      setOutput('(출력 없음)')
+    }
+  }
+
   const runCode = async () => {
     setIsRunning(true)
     setOutput('')
     setError('')
 
     try {
-      const headers = { 'Content-Type': 'application/json' }
-      if (JUDGE0_KEY) {
-        headers['X-RapidAPI-Key'] = JUDGE0_KEY
-        headers['X-RapidAPI-Host'] = 'judge0-ce.p.rapidapi.com'
-      }
-
-      const response = await fetch(`${JUDGE0_URL}/submissions?base64_encoded=true&wait=true`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          source_code: btoa(unescape(encodeURIComponent(code))),
-          language_id: languageId,
-          stdin: btoa(unescape(encodeURIComponent(input))),
-        }),
-      })
-
-      const result = await response.json()
-
-      if (result.stdout) {
-        const decoded = decodeURIComponent(escape(atob(result.stdout)))
-        setOutput(decoded)
-        onResult?.(decoded)
-      } else if (result.stderr) {
-        setError(decodeURIComponent(escape(atob(result.stderr))))
-      } else if (result.compile_output) {
-        setError(decodeURIComponent(escape(atob(result.compile_output))))
-      } else if (result.message) {
-        setError(result.message)
+      if (useJudge0) {
+        await runWithJudge0()
       } else {
-        setOutput('(출력 없음)')
+        await runWithPiston()
       }
     } catch (err) {
       setError(`실행 오류: ${err.message}`)

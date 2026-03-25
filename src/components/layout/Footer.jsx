@@ -1,101 +1,109 @@
-import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Footer() {
-  const [showBackToTop, setShowBackToTop] = useState(false)
+  const quickLinks = [
+    { path: '/written-exam', label: '필기시험' },
+    { path: '/practical-exam', label: '실기시험' },
+    { path: '/coding-lab', label: '코딩실습' },
+    { path: '/lectures', label: '강의실' },
+    { path: '/mypage', label: '마이페이지' },
+    { path: '/login', label: '로그인' },
+  ]
 
-  useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 400)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+  const familySites = [
+    { name: 'Python 학습센터', url: 'https://python-study.dreamitbiz.com' },
+    { name: '큐넷 (Q-net)', url: 'https://www.q-net.or.kr' },
+    { name: 'DreamIT Biz', url: 'https://dreamitbiz.com' },
+  ]
 
   const handleFamilySite = (e) => {
     const url = e.target.value
-    if (url) window.open(url, '_blank')
-    e.target.value = ''
+    if (url) {
+      window.open(url, '_blank', 'noopener')
+      e.target.value = ''
+    }
   }
 
   return (
-    <>
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-grid">
-            {/* Brand */}
-            <div>
-              <div className="footer-logo">
-                <span className="brand-eip">EIP</span>
-                <span className="brand-study"> 학습센터</span>
-              </div>
-              <p className="footer-desc">
-                정보처리기사, 산업기사, 프로그래밍기능사<br />
-                필기/실기 종합 학습 플랫폼
-              </p>
-              <div className="footer-family">
-                <select onChange={handleFamilySite} defaultValue="">
-                  <option value="" disabled>패밀리 사이트</option>
-                  <option value="https://python-study.dreamitbiz.com">Python 학습센터</option>
-                  <option value="https://www.q-net.or.kr">큐넷 (Q-net)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div className="footer-section">
-              <h4>바로가기</h4>
-              <div className="footer-quick-links">
-                <a href="/written-exam">필기시험</a>
-                <a href="/practical-exam">실기시험</a>
-                <a href="/coding-lab">코딩실습</a>
-                <a href="/lectures">강의실</a>
-                <a href="/mypage">마이페이지</a>
-                <a href="/login">로그인</a>
-              </div>
-            </div>
-
-            {/* Contact */}
-            <div className="footer-section">
-              <h4>안내</h4>
-              <ul className="footer-contact">
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href="mailto:info@dreamitbiz.com">info@dreamitbiz.com</a>
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  학습 목적으로 제작된 사이트입니다
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  한국산업인력공단과 무관합니다
-                </li>
-              </ul>
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          {/* Brand */}
+          <div className="footer-brand">
+            <h3 className="footer-logo">
+              <span className="brand-eip">EIP</span>
+              <span className="brand-study"> 학습센터</span>
+            </h3>
+            <p>정보처리 자격증 종합 학습 플랫폼</p>
+            <p className="footer-desc">
+              정보처리기사, 산업기사, 프로그래밍기능사<br />
+              필기/실기 학습부터 코딩실습까지
+            </p>
+            <div className="footer-family">
+              <select onChange={handleFamilySite} defaultValue="">
+                <option value="" disabled>Family Site</option>
+                {familySites.map((s, i) => (
+                  <option key={i} value={s.url}>{s.name}</option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <div className="footer-bottom">
-            <span>&copy; 2026 DreamIT. All rights reserved.</span>
-            <span className="footer-meta">EIP 정보처리 학습센터 v1.0</span>
+          {/* Quick Links */}
+          <div className="footer-section">
+            <h4 className="footer-heading">바로가기</h4>
+            <ul className="footer-quick-links">
+              {quickLinks.map((item, i) => (
+                <li key={i}>
+                  <Link to={item.path}>{item.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="footer-section">
+            <h4 className="footer-heading">안내</h4>
+            <ul className="footer-contact">
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <a href="mailto:info@dreamitbiz.com">info@dreamitbiz.com</a>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                <span>010-3700-0629</span>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>학습 목적으로 제작된 사이트입니다</span>
+              </li>
+              <li>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>한국산업인력공단과 무관합니다</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </footer>
 
-      <button
-        className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
-        onClick={scrollToTop}
-        aria-label="맨 위로"
-      >
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+        <div className="footer-bottom">
+          <p>&copy; 2026 DreamIT. All rights reserved.</p>
+          <p className="footer-meta">EIP 정보처리 학습센터 v1.1</p>
+        </div>
+      </div>
+
+      <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="맨 위로">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="18 15 12 9 6 15"/>
         </svg>
       </button>
-    </>
+    </footer>
   )
 }
