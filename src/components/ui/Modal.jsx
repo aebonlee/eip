@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export default function Modal({ isOpen, onClose, title, children, size = 'md' }) {
+export default function Modal({ isOpen, onClose, title, children }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -12,27 +12,22 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
 
   if (!isOpen) return null
 
-  const sizes = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-    full: 'max-w-6xl',
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-primary-light border border-primary-lighter rounded-2xl ${sizes[size]} w-full max-h-[90vh] overflow-y-auto`}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+        onClick={onClose}
+      />
+      <div className="card" style={{ position: 'relative', maxWidth: '560px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-primary-lighter">
-            <h3 className="text-lg font-semibold text-white">{title}</h3>
-            <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors text-2xl leading-none cursor-pointer">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-light)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 600 }}>{title}</h3>
+            <button onClick={onClose} style={{ fontSize: '24px', color: 'var(--text-light)', cursor: 'pointer', background: 'none', border: 'none' }}>
               &times;
             </button>
           </div>
         )}
-        <div className="p-6">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   )

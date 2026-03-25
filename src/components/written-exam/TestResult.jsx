@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import { certTypes } from '../../data/written-exam-data'
-import Card from '../ui/Card'
-import Button from '../ui/Button'
 
 export default function TestResult() {
   const { certType } = useParams()
@@ -16,97 +14,86 @@ export default function TestResult() {
 
   if (!location.state) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-white mb-4">시험 결과가 없습니다</h2>
-        <Link to={`/written-exam/${certType}/mock-test`}>
-          <Button variant="outline">모의시험 보기</Button>
-        </Link>
+      <div className="container" style={{ textAlign: 'center', padding: '80px 24px' }}>
+        <h2 style={{ marginBottom: 16 }}>시험 결과가 없습니다</h2>
+        <Link to={`/written-exam/${certType}/mock-test`} className="btn btn-outline">모의시험 보기</Link>
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="quiz-container">
       {/* 결과 요약 */}
-      <Card className={`text-center mb-8 ${passed ? 'border-success/30' : 'border-warning/30'}`}>
-        <div className={`w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold ${
-          passed ? 'bg-success/20 text-success' : 'bg-warning/20 text-warning'
-        }`}>
-          {percentage}%
+      <div className="quiz-card" style={{ textAlign: 'center', marginBottom: 32 }}>
+        <div className={`quiz-score-circle ${passed ? 'passed' : 'failed'}`}>
+          <span className="score-number">{percentage}</span>
+          <span className="score-unit">점</span>
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
           {passed ? '합격!' : '불합격'}
         </h1>
-        <p className="text-slate-400 mb-1">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 4 }}>
           {cert?.name} CBT 모의시험 결과
         </p>
-        <p className="text-lg text-white">
-          {total}문제 중 <span className={passed ? 'text-success' : 'text-warning'}>{score}문제</span> 정답
+        <p style={{ fontSize: 18 }}>
+          {total}문제 중 <span style={{ color: passed ? 'var(--success)' : 'var(--error)', fontWeight: 700 }}>{score}문제</span> 정답
         </p>
-        <p className="text-sm text-slate-500 mt-2">(합격 기준: 60% 이상)</p>
+        <p style={{ fontSize: 13, color: 'var(--text-light)', marginTop: 8 }}>(합격 기준: 60% 이상)</p>
 
-        <div className="flex justify-center gap-4 mt-6">
-          <Link to={`/written-exam/${certType}/mock-test`}>
-            <Button variant="accent">다시 풀기</Button>
-          </Link>
-          <Link to={`/written-exam/${certType}`}>
-            <Button variant="outline">과목 목록으로</Button>
-          </Link>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 24 }}>
+          <Link to={`/written-exam/${certType}/mock-test`} className="btn btn-accent">다시 풀기</Link>
+          <Link to={`/written-exam/${certType}`} className="btn btn-outline">과목 목록으로</Link>
         </div>
-      </Card>
+      </div>
 
       {/* 문제별 결과 */}
-      <h2 className="text-xl font-bold text-white mb-4">문제별 결과</h2>
-      <div className="space-y-4">
+      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>문제별 결과</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {questions.map((q, idx) => {
           const userAnswer = answers[q.id]
           const isCorrect = userAnswer === q.answer
           return (
-            <Card key={q.id} className={`${isCorrect ? 'border-success/20' : 'border-danger/20'}`}>
-              <div className="flex items-start gap-3">
-                <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                  isCorrect ? 'bg-success/20 text-success' : 'bg-danger/20 text-danger'
-                }`}>
+            <div key={q.id} className="quiz-card" style={{ borderLeft: `4px solid ${isCorrect ? 'var(--success)' : 'var(--error)'}` }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span className={`option-letter ${isCorrect ? '' : ''}`} style={{ background: isCorrect ? 'var(--success-light)' : 'var(--error-light)', color: isCorrect ? 'var(--success-dark)' : 'var(--error-dark)', fontWeight: 700 }}>
                   {isCorrect ? 'O' : 'X'}
                 </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-slate-500 mb-1">문제 {idx + 1}</p>
-                  <p className="text-white font-medium mb-3">{q.question}</p>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 13, color: 'var(--text-light)', marginBottom: 4 }}>문제 {idx + 1}</p>
+                  <p style={{ fontWeight: 500, marginBottom: 12 }}>{q.question}</p>
 
-                  <div className="space-y-2">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {q.options.map((option, optIdx) => (
                       <div
                         key={optIdx}
-                        className={`text-sm px-3 py-2 rounded ${
-                          optIdx === q.answer
-                            ? 'bg-success/10 text-success border border-success/20'
-                            : optIdx === userAnswer && !isCorrect
-                              ? 'bg-danger/10 text-danger border border-danger/20 line-through'
-                              : 'text-slate-400'
-                        }`}
+                        className={`quiz-option ${optIdx === q.answer ? 'correct' : ''} ${optIdx === userAnswer && !isCorrect ? 'wrong' : ''}`}
+                        style={{ cursor: 'default', padding: '10px 14px', fontSize: 14 }}
                       >
-                        {optIdx + 1}. {option}
-                        {optIdx === q.answer && ' ✓'}
-                        {optIdx === userAnswer && !isCorrect && ' (내 답)'}
+                        <span className="option-letter" style={{ width: 24, height: 24, fontSize: 12 }}>{optIdx + 1}</span>
+                        <span>
+                          {option}
+                          {optIdx === q.answer && ' ✓'}
+                          {optIdx === userAnswer && !isCorrect && ' (내 답)'}
+                        </span>
                       </div>
                     ))}
                   </div>
 
                   <button
                     onClick={() => setShowExplanation(prev => ({ ...prev, [q.id]: !prev[q.id] }))}
-                    className="text-accent text-sm mt-3 hover:underline cursor-pointer"
+                    className="btn-link" style={{ marginTop: 12, fontSize: 14, cursor: 'pointer' }}
                   >
                     {showExplanation[q.id] ? '해설 닫기' : '해설 보기'}
                   </button>
 
                   {showExplanation[q.id] && (
-                    <div className="mt-2 p-3 bg-accent/5 border border-accent/10 rounded-lg">
-                      <p className="text-sm text-slate-300">{q.explanation}</p>
+                    <div className="quiz-explanation">
+                      <p>{q.explanation}</p>
                     </div>
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
           )
         })}
       </div>

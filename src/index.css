@@ -1,44 +1,12 @@
-@import "tailwindcss";
+/* EIP 정보처리 학습센터 - CSS Imports */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-@theme {
-  --color-primary: #0F172A;
-  --color-primary-light: #1E293B;
-  --color-primary-lighter: #334155;
-  --color-secondary: #1E40AF;
-  --color-secondary-light: #2563EB;
-  --color-secondary-dark: #1E3A8A;
-  --color-accent: #06B6D4;
-  --color-accent-light: #22D3EE;
-  --color-success: #10B981;
-  --color-success-light: #34D399;
-  --color-warning: #F59E0B;
-  --color-warning-light: #FBBF24;
-  --color-danger: #EF4444;
-  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-}
-
-@layer base {
-  body {
-    background-color: #0F172A;
-    color: #E2E8F0;
-    font-family: var(--font-sans);
-    margin: 0;
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #1E293B;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #64748B;
-  }
-}
+@import './styles/base.css';
+@import './styles/navbar.css';
+@import './styles/hero.css';
+@import './styles/footer.css';
+@import './styles/course.css';
+@import './styles/editor.css';
+@import './styles/lectures.css';
+@import './styles/mypage.css';
+@import './styles/animations.css';

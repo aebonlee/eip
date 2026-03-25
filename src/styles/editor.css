@@ -1,0 +1,232 @@
+/* ===== Code Editor ===== */
+.code-editor-wrapper {
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.editor-header {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editor-header-title {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editor-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editor-header-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.editor-header-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.editor-header-btn.active {
+  background: rgba(255, 212, 59, 0.3);
+  border-color: rgba(255, 212, 59, 0.5);
+}
+
+/* Run button */
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--primary);
+  color: white;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.run-btn:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.run-btn .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Output */
+.editor-output {
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  min-height: 80px;
+  margin-top: 12px;
+}
+
+.editor-output-label {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.editor-stdout {
+  font-family: var(--font-code);
+  font-size: 14px;
+  color: var(--success-dark);
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.editor-stderr {
+  font-family: var(--font-code);
+  font-size: 14px;
+  color: #DC2626;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.editor-placeholder {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* Problem + Editor layout */
+.coding-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 32px 24px;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.coding-problem {
+  min-width: 0;
+}
+
+.coding-editor-panel {
+  min-width: 0;
+}
+
+/* Coding Language Cards */
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.lang-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  text-decoration: none;
+  transition: var(--transition);
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+.lang-card:nth-child(1) { animation-delay: 0.1s; }
+.lang-card:nth-child(2) { animation-delay: 0.2s; }
+.lang-card:nth-child(3) { animation-delay: 0.3s; }
+
+.lang-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.lang-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: white;
+}
+
+/* Info notice */
+.info-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba(48, 105, 152, 0.06);
+  border: 1px solid rgba(48, 105, 152, 0.12);
+  border-radius: var(--radius-lg);
+}
+
+.info-notice-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: rgba(48, 105, 152, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.info-notice h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.info-notice p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .coding-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lang-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .lang-grid {
+    grid-template-columns: 1fr;
+  }
+}

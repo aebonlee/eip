@@ -14,10 +14,10 @@ export default function AuthCallback() {
   }, [navigate])
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin w-10 h-10 border-3 border-accent border-t-transparent rounded-full mx-auto mb-4" />
-        <p className="text-slate-400">로그인 처리 중...</p>
+    <div className="auth-page">
+      <div style={{ textAlign: 'center' }}>
+        <div className="animate-spin" style={{ width: 40, height: 40, border: '3px solid var(--border-light)', borderTopColor: 'var(--primary)', borderRadius: '50%', margin: '0 auto 16px' }} />
+        <p style={{ color: 'rgba(255,255,255,0.7)' }}>로그인 처리 중...</p>
       </div>
     </div>
   )

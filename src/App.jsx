@@ -54,10 +54,10 @@ function App() {
 
           {/* 404 */}
           <Route path="*" element={
-            <div className="text-center py-20">
-              <h1 className="text-6xl font-bold text-accent mb-4">404</h1>
-              <p className="text-slate-400 mb-6">페이지를 찾을 수 없습니다</p>
-              <a href="/" className="text-accent hover:underline">홈으로 돌아가기</a>
+            <div className="container" style={{ textAlign: 'center', padding: '120px 24px' }}>
+              <h1 style={{ fontSize: 72, fontWeight: 800, color: 'var(--primary)', marginBottom: 16 }}>404</h1>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>페이지를 찾을 수 없습니다</p>
+              <a href="/" className="btn btn-primary">홈으로 돌아가기</a>
             </div>
           } />
         </Route>

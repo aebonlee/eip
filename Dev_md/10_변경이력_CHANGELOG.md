@@ -70,6 +70,39 @@
 
 ---
 
+## v1.1.0 (2026-03-26) - 디자인 시스템 전면 개편
+
+### CSS 디자인 시스템 교체
+- TailwindCSS 4 제거 → 순수 CSS Custom Properties 기반 디자인 시스템으로 전환
+- python-study (PyMaster) 프로젝트의 디자인 스타일을 참고하여 전면 재구현
+- 9개 CSS 모듈 파일 생성 (base, navbar, hero, footer, course, editor, animations, lectures, mypage)
+
+### 새 디자인 시스템 특징
+- **컬러 팔레트**: Primary #306998 (딥블루), Accent #FFD43B (옐로우) 기반
+- **글래스모피즘 네비바**: backdrop-filter blur, 투명 배경, 스크롤 반응
+- **히어로 섹션**: 그라디언트 배경, 파티클 애니메이션, 떠다니는 코드 라인
+- **다크 푸터**: 그라디언트 배경, 3컬럼 그리드, 패밀리 사이트 셀렉트, 맨 위로 버튼
+- **페이지 헤더**: 그라디언트 배경 + 글래스모피즘 아이콘 + 브레드크럼
+- **카드 시스템**: .card, .card-hover, .cert-card, .subject-card, .path-card 등
+- **퀴즈 UI**: 문제 번호 내비게이션, 선택 옵션 하이라이트, 정답/오답 시각 피드백
+- **코드 에디터**: 헤더 바, 실행 버튼, stdout/stderr 분리 출력
+- **반응형**: 1024px, 768px, 480px 브레이크포인트
+
+### 컴포넌트 전면 리라이팅
+- 모든 JSX 컴포넌트에서 Tailwind 유틸리티 클래스 제거
+- CSS 모듈의 시맨틱 클래스명 사용 (.card, .btn-primary, .quiz-option 등)
+- UI 컴포넌트 (Button, Card, Timer, ProgressBar, Modal) 순수 CSS 클래스 기반으로 재작성
+- Header → 글래스모피즘 네비바 (유저 메뉴 드롭다운 포함)
+- Footer → 다크 그라디언트 푸터 (3컬럼 + 맨 위로 버튼)
+- HomePage → Hero + Stats + Features + Path Cards + CTA 섹션
+- 각 학습 페이지 → page-header + 통일된 카드/퀴즈 UI
+
+### 폰트
+- 본문: Noto Sans KR (Google Fonts CDN)
+- 코드: JetBrains Mono
+
+---
+
 ## 향후 계획
 
 ### v1.1.0 (예정)

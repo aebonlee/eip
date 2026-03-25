@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { languages, getExercises } from '../../data/coding-exercises'
 import CodeEditor from './CodeEditor'
-import Card from '../ui/Card'
-import Button from '../ui/Button'
 
 export default function CodingExercise() {
   const { language } = useParams()
@@ -16,9 +14,9 @@ export default function CodingExercise() {
 
   if (!lang) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-white mb-4">지원하지 않는 언어입니다</h2>
-        <Link to="/coding-lab"><Button variant="outline">돌아가기</Button></Link>
+      <div className="container" style={{ textAlign: 'center', padding: '80px 24px' }}>
+        <h2 style={{ marginBottom: 16 }}>지원하지 않는 언어입니다</h2>
+        <Link to="/coding-lab" className="btn btn-outline">돌아가기</Link>
       </div>
     )
   }
@@ -27,9 +25,9 @@ export default function CodingExercise() {
 
   if (!exercise) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-white mb-4">{lang.name} 실습 문제 준비 중</h2>
-        <Link to="/coding-lab"><Button variant="outline">돌아가기</Button></Link>
+      <div className="container" style={{ textAlign: 'center', padding: '80px 24px' }}>
+        <h2 style={{ marginBottom: 16 }}>{lang.name} 실습 문제 준비 중</h2>
+        <Link to="/coding-lab" className="btn btn-outline">돌아가기</Link>
       </div>
     )
   }
@@ -43,114 +41,116 @@ export default function CodingExercise() {
 
   const isCorrect = lastOutput.trim() === exercise.expectedOutput.trim()
 
-  const difficultyColors = {
-    easy: 'bg-success/20 text-success',
-    medium: 'bg-warning/20 text-warning',
-    hard: 'bg-danger/20 text-danger',
-  }
+  const difficultyClass = { easy: 'difficulty-easy', medium: 'difficulty-medium', hard: 'difficulty-hard' }
+  const difficultyLabel = { easy: '쉬움', medium: '보통', hard: '어려움' }
 
   return (
-    <div>
-      <Link to="/coding-lab" className="text-accent text-sm hover:underline">&larr; 코딩실습 홈으로</Link>
-      <div className="flex items-center gap-3 mt-2 mb-6">
-        <h1 className="text-2xl font-bold text-white">{lang.name} 실습</h1>
+    <>
+      <div className="page-header">
+        <div className="container">
+          <div className="page-header-breadcrumb">
+            <Link to="/coding-lab">코딩실습</Link> / {lang.name}
+          </div>
+          <div className="page-header-inner">
+            <div className="page-header-icon">{lang.icon}</div>
+            <div><h1>{lang.name} 실습</h1></div>
+          </div>
+        </div>
       </div>
 
-      {/* 문제 번호 */}
-      <div className="flex gap-2 mb-6">
-        {exerciseList.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => goTo(idx)}
-            className={`w-9 h-9 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
-              currentEx === idx ? 'bg-accent text-primary' : 'bg-primary-lighter text-slate-400'
-            }`}
-          >
-            {idx + 1}
+      <div className="container" style={{ padding: '32px 24px' }}>
+        {/* 문제 번호 */}
+        <div className="quiz-question-number" style={{ marginBottom: 24 }}>
+          {exerciseList.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => goTo(idx)}
+              className={`quiz-num-btn ${currentEx === idx ? 'active' : ''}`}
+            >
+              {idx + 1}
+            </button>
+          ))}
+        </div>
+
+        <div className="coding-layout">
+          {/* 문제 설명 */}
+          <div className="coding-problem">
+            <div className="card">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                <span className={`difficulty-badge ${difficultyClass[exercise.difficulty]}`}>
+                  {difficultyLabel[exercise.difficulty]}
+                </span>
+                <span style={{ fontSize: 15, fontWeight: 600 }}>{exercise.title}</span>
+              </div>
+
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 16 }}>{exercise.description}</p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div className="schema-box">
+                  <p className="label">입력 예시</p>
+                  <code>{exercise.input}</code>
+                </div>
+                <div className="schema-box">
+                  <p className="label">출력 예시</p>
+                  <code style={{ color: 'var(--success)', whiteSpace: 'pre-line' }}>{exercise.expectedOutput}</code>
+                </div>
+              </div>
+
+              {/* 결과 판정 */}
+              {lastOutput && (
+                <div className={`result-box ${isCorrect ? 'correct' : 'wrong'}`}>
+                  <p className="result-title" style={{ fontSize: 14 }}>
+                    {isCorrect ? '정답! 출력이 일치합니다.' : '출력이 예상 결과와 다릅니다.'}
+                  </p>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                <button className="btn btn-ghost btn-sm" onClick={() => setShowHint(!showHint)}>
+                  {showHint ? '닫기' : '힌트'}
+                </button>
+                <button className="btn btn-ghost btn-sm" onClick={() => setShowSolution(!showSolution)}>
+                  {showSolution ? '닫기' : '정답 코드'}
+                </button>
+              </div>
+
+              {showHint && (
+                <div className="hint-box">
+                  <p>{exercise.hint}</p>
+                </div>
+              )}
+
+              {showSolution && (
+                <div className="schema-box" style={{ marginTop: 12 }}>
+                  <p className="label">정답 코드</p>
+                  <pre style={{ fontSize: 13, whiteSpace: 'pre-wrap', fontFamily: 'var(--font-code)', color: 'var(--text-secondary)' }}>{exercise.solution}</pre>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 코드 에디터 */}
+          <div className="coding-editor-panel">
+            <CodeEditor
+              language={lang.monacoId}
+              languageId={lang.judge0Id}
+              initialCode={exercise.template}
+              input={exercise.input}
+              onResult={setLastOutput}
+            />
+          </div>
+        </div>
+
+        {/* 페이지네이션 */}
+        <div className="lesson-nav" style={{ marginTop: 24 }}>
+          <button className="lesson-nav-btn" disabled={currentEx === 0} onClick={() => goTo(currentEx - 1)}>
+            &#8592; 이전 문제
           </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 문제 설명 */}
-        <div>
-          <Card>
-            <div className="flex items-center gap-2 mb-3">
-              <span className={`text-xs px-2 py-1 rounded-full ${difficultyColors[exercise.difficulty]}`}>
-                {exercise.difficulty === 'easy' ? '쉬움' : exercise.difficulty === 'medium' ? '보통' : '어려움'}
-              </span>
-              <span className="text-sm font-medium text-white">{exercise.title}</span>
-            </div>
-
-            <p className="text-slate-300 mb-4">{exercise.description}</p>
-
-            <div className="space-y-3">
-              <div className="bg-primary rounded-lg p-3">
-                <p className="text-xs text-slate-500 mb-1">입력 예시</p>
-                <code className="text-accent text-sm">{exercise.input}</code>
-              </div>
-              <div className="bg-primary rounded-lg p-3">
-                <p className="text-xs text-slate-500 mb-1">출력 예시</p>
-                <code className="text-success text-sm whitespace-pre-line">{exercise.expectedOutput}</code>
-              </div>
-            </div>
-
-            {/* 결과 판정 */}
-            {lastOutput && (
-              <div className={`mt-4 p-3 rounded-lg border ${
-                isCorrect ? 'bg-success/10 border-success/20' : 'bg-danger/10 border-danger/20'
-              }`}>
-                <p className={`font-bold text-sm ${isCorrect ? 'text-success' : 'text-danger'}`}>
-                  {isCorrect ? '정답! 출력이 일치합니다.' : '출력이 예상 결과와 다릅니다.'}
-                </p>
-              </div>
-            )}
-
-            <div className="flex gap-2 mt-4">
-              <Button variant="ghost" size="sm" onClick={() => setShowHint(!showHint)}>
-                {showHint ? '닫기' : '힌트'}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShowSolution(!showSolution)}>
-                {showSolution ? '닫기' : '정답 코드'}
-              </Button>
-            </div>
-
-            {showHint && (
-              <div className="mt-3 p-3 bg-warning/10 border border-warning/20 rounded-lg">
-                <p className="text-sm text-warning">{exercise.hint}</p>
-              </div>
-            )}
-
-            {showSolution && (
-              <div className="mt-3 bg-primary rounded-lg p-3">
-                <p className="text-xs text-slate-500 mb-2">정답 코드</p>
-                <pre className="text-sm text-slate-300 whitespace-pre-wrap font-mono">{exercise.solution}</pre>
-              </div>
-            )}
-          </Card>
-        </div>
-
-        {/* 코드 에디터 */}
-        <div>
-          <CodeEditor
-            language={lang.monacoId}
-            languageId={lang.judge0Id}
-            initialCode={exercise.template}
-            input={exercise.input}
-            onResult={setLastOutput}
-          />
+          <button className="lesson-nav-btn" disabled={currentEx === exerciseList.length - 1} onClick={() => goTo(currentEx + 1)}>
+            다음 문제 &#8594;
+          </button>
         </div>
       </div>
-
-      {/* 페이지네이션 */}
-      <div className="flex justify-between mt-6">
-        <Button variant="outline" size="sm" disabled={currentEx === 0} onClick={() => goTo(currentEx - 1)}>
-          &larr; 이전 문제
-        </Button>
-        <Button variant="outline" size="sm" disabled={currentEx === exerciseList.length - 1} onClick={() => goTo(currentEx + 1)}>
-          다음 문제 &rarr;
-        </Button>
-      </div>
-    </div>
+    </>
   )
 }

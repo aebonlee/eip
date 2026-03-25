@@ -1,116 +1,117 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 
 const navItems = [
-  { path: '/', label: '홈', icon: '🏠' },
-  { path: '/written-exam', label: '필기시험', icon: '📝' },
-  { path: '/practical-exam', label: '실기시험', icon: '💻' },
-  { path: '/coding-lab', label: '코딩실습', icon: '⌨️' },
-  { path: '/lectures', label: '강의실', icon: '🎓' },
+  { path: '/', label: '홈' },
+  { path: '/written-exam', label: '필기시험' },
+  { path: '/practical-exam', label: '실기시험' },
+  { path: '/coding-lab', label: '코딩실습' },
+  { path: '/lectures', label: '강의실' },
 ]
 
 export default function Header() {
   const { user, profile, signOut } = useAuth()
   const location = useLocation()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const userMenuRef = useRef(null)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
+
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/'
+    return location.pathname.startsWith(path)
+  }
 
   return (
-    <header className="bg-primary border-b border-primary-lighter sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 no-underline">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <span className="text-primary font-bold text-sm">EIP</span>
-            </div>
-            <span className="text-white font-bold text-lg hidden sm:block">정보처리 학습센터</span>
-          </Link>
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="container nav-wrapper">
+        {/* Logo */}
+        <Link to="/" className="nav-logo">
+          <div className="nav-logo-icon">EIP</div>
+          <h1>
+            <span className="brand-eip">EIP</span>
+            <span className="brand-study"> 학습</span>
+          </h1>
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map(item => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors no-underline ${
-                  location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path))
-                    ? 'bg-secondary text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-primary-light'
-                }`}
+        {/* Desktop Nav */}
+        <div className={`nav-menu ${mobileOpen ? 'active' : ''}`}>
+          {navItems.map(item => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="nav-actions">
+          {user ? (
+            <div className="nav-user-menu" ref={userMenuRef}>
+              <button
+                className="nav-user-trigger"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
               >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="" className="nav-user-avatar" />
+                ) : (
+                  <div className="nav-user-avatar-placeholder">
+                    {profile?.nickname?.[0] || '?'}
+                  </div>
+                )}
+              </button>
 
-          {/* User Menu */}
-          <div className="flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <Link to="/mypage" className="flex items-center gap-2 no-underline text-slate-300 hover:text-white transition-colors">
-                  {profile?.avatar_url ? (
-                    <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white text-sm font-bold">
-                      {profile?.nickname?.[0] || '?'}
-                    </div>
-                  )}
-                  <span className="text-sm hidden sm:block">{profile?.nickname}</span>
-                </Link>
-                <button
-                  onClick={signOut}
-                  className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
-                >
+              <div className={`nav-user-balloon ${userMenuOpen ? 'active' : ''}`}>
+                <div className="nav-balloon-arrow" />
+                <div className="nav-user-info">
+                  <div className="nav-user-name">{profile?.nickname}</div>
+                  <div className="nav-user-email">{user.email}</div>
+                </div>
+                <div className="nav-balloon-links">
+                  <Link to="/mypage">마이페이지</Link>
+                </div>
+                <button className="nav-balloon-logout" onClick={signOut}>
                   로그아웃
                 </button>
               </div>
-            ) : (
-              <Link
-                to="/login"
-                className="bg-secondary hover:bg-secondary-light text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors no-underline"
-              >
-                로그인
-              </Link>
-            )}
+            </div>
+          ) : (
+            <Link to="/login" className="nav-login-btn">로그인</Link>
+          )}
 
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-slate-400 hover:text-white cursor-pointer"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+          {/* Mobile Toggle */}
+          <button
+            className={`mobile-toggle ${mobileOpen ? 'active' : ''}`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            <span /><span /><span />
+          </button>
         </div>
-
-        {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden py-3 border-t border-primary-lighter">
-            {navItems.map(item => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors no-underline ${
-                  location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path))
-                    ? 'bg-secondary text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-primary-light'
-                }`}
-              >
-                <span className="mr-2">{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        )}
       </div>
-    </header>
+    </nav>
   )
 }
