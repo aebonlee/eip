@@ -15,7 +15,8 @@
 - **모의시험 호버 버그**: `.nav-mega-link.highlight`에 마우스를 올리면 글자가 사라지는 현상 수정
   - 원인: `.nav-mega-link:hover`의 `padding-left: 12px`이 `.highlight::before`(6px 도트 + 6px 마진)과 합쳐져 텍스트 밀림
   - 1차 해결: `.highlight:hover` 전용 스타일 추가 (`padding-left: 8px`, 배경 primary, 글자 white)
-  - 근본 수정: `.nav-mega-link:hover` → `.nav-mega-link:not(.highlight):hover`로 변경하여 highlight 항목을 일반 호버 패딩 규칙에서 완전 제외
+  - 2차 수정: `.nav-mega-link:hover` → `.nav-mega-link:not(.highlight):hover`로 변경하여 highlight 항목을 일반 호버 패딩 규칙에서 완전 제외
+  - 최종 수정: `transition: all 0.3s`로 인해 `color`(파란→흰)와 `background`(투명→파란)가 동시 전환되면서 전환 중간에 파란 텍스트+파란 배경 구간 발생 → `.highlight`에 `transition: background 0.15s ease`만 적용하여 color는 즉시 전환되도록 수정
 
 #### 메뉴 재정비
 
