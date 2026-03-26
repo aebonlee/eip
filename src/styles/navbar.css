@@ -276,6 +276,16 @@
   vertical-align: middle;
 }
 
+.nav-mega-link.highlight:hover {
+  background: var(--primary);
+  color: white;
+  padding-left: 8px;
+}
+
+.nav-mega-link.highlight:hover::before {
+  background: white;
+}
+
 /* Nav Actions */
 .nav-actions {
   display: flex;

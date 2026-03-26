@@ -4,6 +4,49 @@
 
 ---
 
+## v2.0.1 (2026-03-26)
+
+### 모의시험 메뉴 재정비 + 호버 버그 수정
+
+> 상단 메가 메뉴의 모의시험 항목 호버 시 글자 사라지는 버그 수정 및 메뉴 구조 재정비
+
+#### 버그 수정
+
+- **모의시험 호버 버그**: `.nav-mega-link.highlight`에 마우스를 올리면 글자가 사라지는 현상 수정
+  - 원인: `.nav-mega-link:hover`의 `padding-left: 12px`이 `.highlight::before`(6px 도트 + 6px 마진)과 합쳐져 텍스트 밀림
+  - 해결: `.highlight:hover` 전용 스타일 추가 (`padding-left: 8px`, 배경 primary, 글자 white)
+
+#### 메뉴 재정비
+
+- **필기시험**: "모의시험" 단일 링크 → "회차별 모의시험" (highlight) + "랜덤 모의시험"으로 분리
+- **실기시험**: "실기 모의시험" (highlight) 링크 신규 추가 (회차 선택 페이지 연결)
+- 3개 자격증(정보처리기사, 정보처리산업기사, 프로그래밍기능사) 모두 동일 적용
+
+#### 수정 파일 (2개)
+
+| 파일 | 변경 내용 |
+|------|-----------|
+| `src/styles/navbar.css` | `.nav-mega-link.highlight:hover`, `.highlight:hover::before` 규칙 추가 |
+| `src/components/layout/Header.jsx` | 3개 자격증 megaMenuData 필기/실기 모의시험 링크 재정비 |
+
+#### 메가 메뉴 변경 상세
+
+**필기시험 섹션 (before → after)**
+```
+모의시험 (/written-exam/{cert}/mock-test)
+→ 회차별 모의시험 (/written-exam/{cert}/rounds)  [highlight]
+  랜덤 모의시험 (/written-exam/{cert}/mock-test)
+```
+
+**실기시험 섹션 (before → after)**
+```
+SQL 실습 / 알고리즘 / 단답형 연습
+→ 실기 모의시험 (/practical-exam/{cert}/rounds)  [highlight]  ← 추가
+  SQL 실습 / 알고리즘 / 단답형 연습
+```
+
+---
+
 ## v2.0.0 (2026-03-26)
 
 ### 회차별 모의시험 + 합격 예측 + 문제 은행 확충

@@ -25,12 +25,14 @@ const megaMenuData = [
           { label: '데이터베이스 구축', path: '/written-exam/engineer/db/study' },
           { label: '프로그래밍 언어 활용', path: '/written-exam/engineer/sys-integration/study' },
           { label: '정보시스템 구축관리', path: '/written-exam/engineer/info-security/study' },
-          { label: '모의시험', path: '/written-exam/engineer/mock-test', highlight: true },
+          { label: '회차별 모의시험', path: '/written-exam/engineer/rounds', highlight: true },
+          { label: '랜덤 모의시험', path: '/written-exam/engineer/mock-test' },
         ],
       },
       {
         title: '실기시험',
         items: [
+          { label: '실기 모의시험', path: '/practical-exam/engineer/rounds', highlight: true },
           { label: 'SQL 실습', path: '/practical-exam/engineer/sql' },
           { label: '알고리즘', path: '/practical-exam/engineer/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/engineer/short-answer' },
@@ -63,12 +65,14 @@ const megaMenuData = [
           { label: '프로그래밍 언어 활용', path: '/written-exam/industrial/programming/study' },
           { label: '데이터베이스 활용', path: '/written-exam/industrial/db/study' },
           { label: '정보통신 활용', path: '/written-exam/industrial/info-comm/study' },
-          { label: '모의시험', path: '/written-exam/industrial/mock-test', highlight: true },
+          { label: '회차별 모의시험', path: '/written-exam/industrial/rounds', highlight: true },
+          { label: '랜덤 모의시험', path: '/written-exam/industrial/mock-test' },
         ],
       },
       {
         title: '실기시험',
         items: [
+          { label: '실기 모의시험', path: '/practical-exam/industrial/rounds', highlight: true },
           { label: 'SQL 실습', path: '/practical-exam/industrial/sql' },
           { label: '알고리즘', path: '/practical-exam/industrial/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/industrial/short-answer' },
@@ -100,12 +104,14 @@ const megaMenuData = [
           { label: '정보처리와 컴퓨터 일반', path: '/written-exam/functional/programming-basic/study' },
           { label: '알고리즘', path: '/written-exam/functional/algorithm/study' },
           { label: '데이터베이스', path: '/written-exam/functional/db-basic/study' },
-          { label: '모의시험', path: '/written-exam/functional/mock-test', highlight: true },
+          { label: '회차별 모의시험', path: '/written-exam/functional/rounds', highlight: true },
+          { label: '랜덤 모의시험', path: '/written-exam/functional/mock-test' },
         ],
       },
       {
         title: '실기시험',
         items: [
+          { label: '실기 모의시험', path: '/practical-exam/functional/rounds', highlight: true },
           { label: 'SQL 실습', path: '/practical-exam/functional/sql' },
           { label: '알고리즘', path: '/practical-exam/functional/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/functional/short-answer' },
