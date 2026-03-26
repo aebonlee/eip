@@ -264,9 +264,57 @@
 
 ---
 
+## v1.5.0 (2026-03-26) - 실기시험 문제 자격증별 완전 분리
+
+### 실기시험 문제 분리
+- 기존: 단일 문제 풀에서 난이도 필터링으로 자격증 구분
+- 변경: **자격증별 독립 문제 세트**로 완전 분리
+- `src/data/practical-questions/` 디렉토리 생성:
+  - `engineer.js`: 기사 SQL 15 + 알고리즘 15 + 단답형 30 = 60문제 (기존 문제 이동)
+  - `industrial.js`: 산업기사 SQL 10 + 알고리즘 10 + 단답형 20 = 40문제 (신규 작성)
+  - `functional.js`: 기능사 SQL 7 + 알고리즘 7 + 단답형 10 = 24문제 (신규 작성)
+
+### 자격증별 수준 차이
+- **정보처리기사**: 서브쿼리, HAVING, CASE WHEN, 복합 JOIN / 트리순회, 그래프, 해시, 행렬, 재귀 / 디자인패턴, UML, 보안, 정규화, OSI
+- **정보처리산업기사**: SELECT, WHERE, JOIN, GROUP BY, DML / 배열, 정렬, 스택/큐, 이진탐색 / 정보시스템, 프로그래밍, DB, 정보통신
+- **프로그래밍기능사**: SELECT, WHERE, ORDER BY, COUNT / 변수추적, 반복문, 배열, 기본연산 / 프로그래밍기초, 자료형, 연산자
+
+### 데이터 구조 변경
+- `practical-exam-data.js`: 난이도 필터링 로직 제거, import + certType 매핑 방식으로 변경
+- 기존 getter 함수(`getSQLQuestions(certType)` 등)의 시그니처 유지 — 컴포넌트 수정 불필요
+
+### 문서 업데이트
+- `03_프로젝트_구조.md`: practical-questions/ 디렉토리 구조 반영
+- `09_데이터_구조_설명.md`: 분리 구조, 문제 수준별 설명 업데이트
+
+---
+
+## v1.5.1 (2026-03-26) - 실기시험 문제 대량 확충 (124 → 253문제)
+
+### PDF 참고자료 분석
+- `Dev_md/pdf/` 폴더의 8개 PDF 교재 분석 (130개 키워드 + 17개 SQL + 46개 코드추적 문제)
+- C 포인터, 구조체, 사용자정의함수, Java 클래스/상속, Python 활용 문제를 실기 데이터에 반영
+
+### 정보처리기사 (engineer.js): 60 → 135문제
+- **SQL**: 15 → 30문제 (+15: DISTINCT COUNT, UPDATE SET, DELETE, ALTER TABLE, CREATE INDEX, CROSS JOIN, 서브쿼리 AVG, ALL, CASE WHEN, HAVING MIN/MAX, INSERT INTO SELECT, CREATE VIEW, IS NULL, UNION, 관계대수)
+- **알고리즘**: 15 → 35문제 (+20: C 포인터 문자열길이, 포인터배열, 이중포인터, ary 포인터, char 포인터 ASCII, 구조체 배열/포인터, 소수판별, 거듭제곱, 팩토리얼 재귀, Java 클래스/객체전달/상속오버라이딩, Python lambda/슬라이싱/세트/클래스, C 버블정렬, Java static 메소드, C 2차원배열 지뢰찾기)
+- **단답형**: 30 → 70문제 (+40: UML 다이어그램, 팩토리메소드/브리지/옵서버 패턴, DB 튜플/후보키/정규화, SQL삽입/XSS/세션하이재킹/Land Attack/ARP스푸핑, DNS/프레임/서브넷/TCP/UDP, 결합도/응집도/화이트박스/커버리지, DES/AES/RSA, EAI/ACID, 비트연산, OOP개념, Java 예약어)
+
+### 정보처리산업기사 (industrial.js): 40 → 71문제
+- **SQL**: 10 → 18문제 (+8: LIKE, BETWEEN, IN, COUNT NULL, ALTER TABLE DROP, HAVING, CREATE TABLE, LEFT JOIN)
+- **알고리즘**: 10 → 18문제 (+8: C for 모듈로, while 자릿수합, Java String, Python 리스트 슬라이싱, C switch fall-through, Python dictionary, 선택정렬, C 체인함수)
+- **단답형**: 20 → 35문제 (+15: 트랜잭션, HAVING, 동치분할, 경계값, HTTP 404, ARP, 오버라이딩/오버로딩, ALTER DDL, 애자일, 대칭/비대칭 암호화, Python 비교, DML, 클래스다이어그램)
+
+### 프로그래밍기능사 (functional.js): 24 → 47문제
+- **SQL**: 7 → 13문제 (+6: DISTINCT, OR, ORDER BY DESC, MAX, AVG, GROUP BY)
+- **알고리즘**: 7 → 14문제 (+7: C char ASCII, 역순출력, Python //%연산, C 중첩for, Python 문자열, C 배열최대값, Python for-range 합)
+- **단답형**: 10 → 20문제 (+10: 선택구조, 반복구조, float/double, char, 후위증감, 널문자, const, 배열, 삼항연산자, 런타임에러)
+
+---
+
 ## 향후 계획
 
-### v1.5.0 (예정)
+### v1.6.0 (예정)
 - [ ] 학습 진도 추적 기능 완성
 - [ ] 오답 노트 기능
 - [ ] 커뮤니티 기능 구현 (질문/답변, 시험 후기)

@@ -15,6 +15,12 @@ dist-ssr
 # Environment variables
 .env
 
+# Claude Code
+.claude/
+
+# PDF reference files
+Dev_md/pdf/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
