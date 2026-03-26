@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { sb_getTestResults, sb_getCodeSubmissions } from '../../lib/supabase'
 import ProgressBar from '../ui/ProgressBar'
+import PassPrediction from './PassPrediction'
 
 export default function MyPage() {
   const { user, profile, loading } = useAuth()
@@ -31,9 +32,12 @@ export default function MyPage() {
     ? Math.round(testResults.reduce((sum, r) => sum + (r.score / r.total) * 100, 0) / testResults.length)
     : 0
 
+  const targetCert = profile?.target_cert || 'engineer'
+
   const tabs = [
     { id: 'overview', label: '개요' },
     { id: 'tests', label: '시험 결과' },
+    { id: 'prediction', label: '합격 예측' },
     { id: 'coding', label: '코딩 이력' },
   ]
 
@@ -63,8 +67,8 @@ export default function MyPage() {
             <h2 className="mypage-name">{profile?.nickname}</h2>
             <p className="mypage-email">{user.email}</p>
             <span className="mypage-cert-badge">
-              {profile?.target_cert === 'engineer' ? '정보처리기사' :
-               profile?.target_cert === 'industrial' ? '정보처리산업기사' : '프로그래밍기능사'}
+              {targetCert === 'engineer' ? '정보처리기사' :
+               targetCert === 'industrial' ? '정보처리산업기사' : '프로그래밍기능사'}
             </span>
           </div>
         </div>
@@ -127,7 +131,8 @@ export default function MyPage() {
                     <h4>
                       {result.cert_type === 'engineer' ? '정보처리기사' :
                        result.cert_type === 'industrial' ? '정보처리산업기사' : '프로그래밍기능사'}
-                      {' '}{result.test_type === 'written' ? '필기' : '실기'} 모의시험
+                      {' '}{result.test_type === 'written' ? '필기' : '실기'}
+                      {result.round_number ? ` ${result.round_number}회차` : ' 랜덤'} 모의시험
                     </h4>
                     <p>{new Date(result.taken_at).toLocaleDateString('ko-KR')}</p>
                   </div>
@@ -141,6 +146,11 @@ export default function MyPage() {
               ))
             )}
           </div>
+        )}
+
+        {/* 합격 예측 탭 */}
+        {activeTab === 'prediction' && (
+          <PassPrediction certType={targetCert} />
         )}
 
         {/* 코딩 이력 탭 */}

@@ -55,11 +55,23 @@ export async function sb_getTestResults(userId) {
 }
 
 export async function sb_saveTestResult(result) {
+  // result may now include: round_number, subject_scores
   const { data, error } = await supabase
     .from('sb_test_results')
     .insert(result)
     .select()
     .single()
+  return { data, error }
+}
+
+export async function sb_getTestResultsByType(userId, certType, testType) {
+  const { data, error } = await supabase
+    .from('sb_test_results')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('cert_type', certType)
+    .eq('test_type', testType)
+    .order('taken_at', { ascending: false })
   return { data, error }
 }
 

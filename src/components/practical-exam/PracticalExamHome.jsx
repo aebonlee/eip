@@ -49,6 +49,18 @@ export default function PracticalExamHome() {
       </div>
 
       <div className="container" style={{ padding: '48px 24px' }}>
+        {/* 실기 모의시험 배너 */}
+        <div className="mock-test-banner" style={{ marginBottom: 32 }}>
+          <div>
+            <h2>실기 모의시험</h2>
+            <p>SQL + 알고리즘 + 단답형 혼합 회차별 모의시험</p>
+          </div>
+          <Link to={`/practical-exam/${certType}/rounds`} className="btn btn-accent">
+            회차별 모의시험
+          </Link>
+        </div>
+
+        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>개별 연습</h2>
         <div className="practical-grid">
           {practicalSections.map(section => (
             <Link key={section.path} to={section.path} className="practical-card">

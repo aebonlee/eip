@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { certTypes, getMockTestQuestions } from '../../data/written-exam-data'
+import { certTypes, getMockTestQuestions, getWrittenRoundQuestions } from '../../data/written-exam-data'
 import { useAuth } from '../../contexts/AuthContext'
 import { sb_saveTestResult } from '../../lib/supabase'
 import Timer from '../ui/Timer'
 
 export default function MockTest() {
-  const { certType } = useParams()
+  const { certType, round } = useParams()
+  const roundNumber = round ? parseInt(round, 10) : null
   const navigate = useNavigate()
   const { user } = useAuth()
   const cert = certTypes[certType]
@@ -18,7 +19,9 @@ export default function MockTest() {
   const [submitted, setSubmitted] = useState(false)
 
   const startTest = () => {
-    const qs = getMockTestQuestions(certType, 20)
+    const qs = roundNumber
+      ? getWrittenRoundQuestions(certType, roundNumber, 20)
+      : getMockTestQuestions(certType, 20)
     setQuestions(qs)
     setAnswers({})
     setCurrentQ(0)
@@ -36,8 +39,13 @@ export default function MockTest() {
     setSubmitted(true)
 
     let score = 0
+    const subjectScores = {}
     questions.forEach(q => {
-      if (answers[q.id] === q.answer) score++
+      const correct = answers[q.id] === q.answer
+      if (correct) score++
+      if (!subjectScores[q.subject]) subjectScores[q.subject] = { correct: 0, total: 0 }
+      subjectScores[q.subject].total++
+      if (correct) subjectScores[q.subject].correct++
     })
 
     if (user) {
@@ -48,13 +56,15 @@ export default function MockTest() {
         score,
         total: questions.length,
         answers,
+        ...(roundNumber ? { round_number: roundNumber } : {}),
+        subject_scores: subjectScores,
       })
     }
 
     navigate(`/written-exam/${certType}/result`, {
-      state: { questions, answers, score, total: questions.length },
+      state: { questions, answers, score, total: questions.length, roundNumber, subjectScores },
     })
-  }, [submitted, questions, answers, user, certType, navigate])
+  }, [submitted, questions, answers, user, certType, roundNumber, navigate])
 
   if (!cert) {
     return (
@@ -71,7 +81,7 @@ export default function MockTest() {
         <div className="page-header">
           <div className="container">
             <div className="page-header-breadcrumb">
-              <Link to="/written-exam">필기시험</Link> / <Link to={`/written-exam/${certType}`}>{cert.name}</Link> / 모의시험
+              <Link to="/written-exam">필기시험</Link> / <Link to={`/written-exam/${certType}`}>{cert.name}</Link> / {roundNumber ? <><Link to={`/written-exam/${certType}/rounds`}>회차별</Link> / {roundNumber}회차</> : '모의시험'}
             </div>
             <div className="page-header-inner">
               <div className="page-header-icon">📋</div>
@@ -84,9 +94,13 @@ export default function MockTest() {
             <div className="quiz-score-circle" style={{ background: 'var(--gradient-primary)' }}>
               <span style={{ fontSize: 36 }}>📋</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>CBT 모의시험</h2>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+              {roundNumber ? `${roundNumber}회차 모의시험` : 'CBT 모의시험'}
+            </h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: 4 }}>총 20문항 | 제한시간 30분</p>
-            <p style={{ color: 'var(--text-light)', fontSize: 14, marginBottom: 32 }}>전 과목에서 랜덤으로 출제됩니다</p>
+            <p style={{ color: 'var(--text-light)', fontSize: 14, marginBottom: 32 }}>
+              {roundNumber ? `${roundNumber}회차 고정 문제가 출제됩니다` : '전 과목에서 랜덤으로 출제됩니다'}
+            </p>
             <button className="btn btn-accent btn-lg" onClick={startTest}>시험 시작</button>
           </div>
         </div>
@@ -102,7 +116,9 @@ export default function MockTest() {
       {/* 상단 바 */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{cert.name} 모의시험</h1>
+          <h1 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
+            {cert.name} {roundNumber ? `${roundNumber}회차` : ''} 모의시험
+          </h1>
           <p style={{ fontSize: 14, color: 'var(--text-light)' }}>{answeredCount}/{questions.length} 답변 완료</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

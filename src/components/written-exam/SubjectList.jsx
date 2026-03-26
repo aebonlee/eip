@@ -36,11 +36,16 @@ export default function SubjectList() {
         <div className="mock-test-banner">
           <div>
             <h2>CBT 모의시험</h2>
-            <p>전 과목 랜덤 출제 모의시험을 풀어보세요</p>
+            <p>회차별 또는 랜덤 모의시험을 풀어보세요</p>
           </div>
-          <Link to={`/written-exam/${certType}/mock-test`} className="btn btn-accent">
-            모의시험 시작
-          </Link>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <Link to={`/written-exam/${certType}/rounds`} className="btn btn-accent">
+              회차별 모의시험
+            </Link>
+            <Link to={`/written-exam/${certType}/mock-test`} className="btn btn-outline">
+              랜덤 모의시험
+            </Link>
+          </div>
         </div>
 
         {/* 과목 목록 */}

@@ -5,6 +5,7 @@ import { functionalChapters } from './chapters/functional'
 import { engineerQuestions } from './mock-questions/engineer'
 import { industrialQuestions } from './mock-questions/industrial'
 import { functionalQuestions } from './mock-questions/functional'
+import { hashString, seededShuffle } from './round-utils'
 
 export const certTypes = {
   engineer: {
@@ -64,5 +65,18 @@ export function getQuestionsBySubject(certType, subjectId) {
 export function getMockTestQuestions(certType, count = 20) {
   const questions = mockQuestions[certType] || []
   const shuffled = [...questions].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, Math.min(count, shuffled.length))
+}
+
+// 회차별 모의시험
+export function getMaxWrittenRounds(certType) {
+  const total = (mockQuestions[certType] || []).length
+  return Math.floor(total / 20)
+}
+
+export function getWrittenRoundQuestions(certType, roundNumber, count = 20) {
+  const questions = mockQuestions[certType] || []
+  const seed = hashString(`written-${certType}-round-${roundNumber}`)
+  const shuffled = seededShuffle(questions, seed)
   return shuffled.slice(0, Math.min(count, shuffled.length))
 }

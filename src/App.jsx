@@ -7,9 +7,13 @@ import AuthCallback from './components/auth/AuthCallback'
 import WrittenExamHome from './components/written-exam/WrittenExamHome'
 import SubjectList from './components/written-exam/SubjectList'
 import ChapterStudy from './components/written-exam/ChapterStudy'
+import RoundSelect from './components/written-exam/RoundSelect'
 import MockTest from './components/written-exam/MockTest'
 import TestResult from './components/written-exam/TestResult'
 import PracticalExamHome from './components/practical-exam/PracticalExamHome'
+import PracticalRoundSelect from './components/practical-exam/PracticalRoundSelect'
+import PracticalMockTest from './components/practical-exam/PracticalMockTest'
+import PracticalTestResult from './components/practical-exam/PracticalTestResult'
 import SQLPractice from './components/practical-exam/SQLPractice'
 import AlgorithmPractice from './components/practical-exam/AlgorithmPractice'
 import ShortAnswer from './components/practical-exam/ShortAnswer'
@@ -34,12 +38,17 @@ function App() {
           <Route path="written-exam" element={<WrittenExamHome />} />
           <Route path="written-exam/:certType" element={<SubjectList />} />
           <Route path="written-exam/:certType/:subjectId/study" element={<ChapterStudy />} />
+          <Route path="written-exam/:certType/rounds" element={<RoundSelect />} />
           <Route path="written-exam/:certType/mock-test" element={<MockTest />} />
+          <Route path="written-exam/:certType/mock-test/:round" element={<MockTest />} />
           <Route path="written-exam/:certType/result" element={<TestResult />} />
 
           {/* 실기시험 */}
           <Route path="practical-exam" element={<PracticalExamHome />} />
           <Route path="practical-exam/:certType" element={<PracticalExamHome />} />
+          <Route path="practical-exam/:certType/rounds" element={<PracticalRoundSelect />} />
+          <Route path="practical-exam/:certType/mock-test/:round" element={<PracticalMockTest />} />
+          <Route path="practical-exam/:certType/result" element={<PracticalTestResult />} />
           <Route path="practical-exam/:certType/sql" element={<SQLPractice />} />
           <Route path="practical-exam/:certType/algorithm" element={<AlgorithmPractice />} />
           <Route path="practical-exam/:certType/short-answer" element={<ShortAnswer />} />

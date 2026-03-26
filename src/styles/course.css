@@ -857,6 +857,127 @@
   background: rgba(37, 99, 235, 0.04);
 }
 
+/* ===== Round Grid (회차 선택) ===== */
+.round-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.round-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: var(--bg-white);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.round-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.round-card.round-passed {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.round-card.round-failed {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.round-card-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.round-card-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+}
+
+/* ===== Subject Bar (과목별 점수) ===== */
+.subject-bar {
+  height: 8px;
+  background: var(--bg-medium);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.subject-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+/* ===== Question Type Badge (실기 문제 유형) ===== */
+.question-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Prediction Gauge (합격 예측) ===== */
+.prediction-gauge {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+/* ===== Score History (점수 이력 바 차트) ===== */
+.score-history {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 120px;
+  padding-bottom: 4px;
+}
+
+.score-history-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.score-history-bar-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.score-history-bar {
+  width: 100%;
+  min-height: 4px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: height 0.4s ease;
+}
+
+.score-history-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .practice-layout {
