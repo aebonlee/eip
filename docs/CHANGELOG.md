@@ -14,7 +14,8 @@
 
 - **모의시험 호버 버그**: `.nav-mega-link.highlight`에 마우스를 올리면 글자가 사라지는 현상 수정
   - 원인: `.nav-mega-link:hover`의 `padding-left: 12px`이 `.highlight::before`(6px 도트 + 6px 마진)과 합쳐져 텍스트 밀림
-  - 해결: `.highlight:hover` 전용 스타일 추가 (`padding-left: 8px`, 배경 primary, 글자 white)
+  - 1차 해결: `.highlight:hover` 전용 스타일 추가 (`padding-left: 8px`, 배경 primary, 글자 white)
+  - 근본 수정: `.nav-mega-link:hover` → `.nav-mega-link:not(.highlight):hover`로 변경하여 highlight 항목을 일반 호버 패딩 규칙에서 완전 제외
 
 #### 메뉴 재정비
 
@@ -26,7 +27,7 @@
 
 | 파일 | 변경 내용 |
 |------|-----------|
-| `src/styles/navbar.css` | `.nav-mega-link.highlight:hover`, `.highlight:hover::before` 규칙 추가 |
+| `src/styles/navbar.css` | `.nav-mega-link:hover` → `:not(.highlight):hover`로 변경, `.highlight:hover` / `.highlight:hover::before` 규칙 추가 |
 | `src/components/layout/Header.jsx` | 3개 자격증 megaMenuData 필기/실기 모의시험 링크 재정비 |
 
 #### 메가 메뉴 변경 상세
