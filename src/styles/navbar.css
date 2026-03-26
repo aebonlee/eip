@@ -263,6 +263,7 @@
 .nav-mega-link.highlight {
   color: var(--primary);
   font-weight: 600;
+  transition: background 0.15s ease;
 }
 
 .nav-mega-link.highlight::before {
