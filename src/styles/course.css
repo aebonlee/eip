@@ -832,6 +832,31 @@
   line-height: 1.8;
 }
 
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 8px 0;
+}
+.md-table th,
+.md-table td {
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+}
+.md-table th {
+  background: var(--bg-medium);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.md-table td {
+  color: var(--text-secondary);
+}
+.md-table tbody tr:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .practice-layout {

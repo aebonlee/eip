@@ -101,24 +101,59 @@ export default function ChapterStudy() {
 
             {/* 본문 */}
             <div>
-              {current.content?.split('\n').map((line, i) => {
-                if (line.startsWith('## ')) {
-                  return <h2 key={i}>{renderInlineMarkdown(line.replace('## ', ''))}</h2>
+              {(() => {
+                const lines = current.content?.split('\n') || []
+                const elements = []
+                let i = 0
+                while (i < lines.length) {
+                  const line = lines[i]
+                  // 마크다운 테이블 감지: | 로 시작하는 연속된 줄
+                  if (line.trimStart().startsWith('|') && line.trim().endsWith('|')) {
+                    const tableLines = []
+                    while (i < lines.length && lines[i].trimStart().startsWith('|') && lines[i].trim().endsWith('|')) {
+                      tableLines.push(lines[i])
+                      i++
+                    }
+                    if (tableLines.length >= 2) {
+                      const parseRow = (row) => row.split('|').slice(1, -1).map(c => c.trim())
+                      const headers = parseRow(tableLines[0])
+                      const dataRows = tableLines.slice(2) // 1번째 줄은 구분선(|---|)
+                      elements.push(
+                        <div key={`table-${i}`} style={{ overflowX: 'auto', margin: '12px 0' }}>
+                          <table className="md-table">
+                            <thead>
+                              <tr>{headers.map((h, hi) => <th key={hi}>{renderInlineMarkdown(h)}</th>)}</tr>
+                            </thead>
+                            <tbody>
+                              {dataRows.map((row, ri) => (
+                                <tr key={ri}>{parseRow(row).map((c, ci) => <td key={ci}>{renderInlineMarkdown(c)}</td>)}</tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                    }
+                    continue
+                  }
+                  if (line.startsWith('## ')) {
+                    elements.push(<h2 key={i}>{renderInlineMarkdown(line.replace('## ', ''))}</h2>)
+                  } else if (line.startsWith('### ')) {
+                    elements.push(<h3 key={i}>{renderInlineMarkdown(line.replace('### ', ''))}</h3>)
+                  } else if (line.startsWith('- ')) {
+                    elements.push(
+                      <p key={i} style={{ marginLeft: 16, marginBottom: 4, color: 'var(--text-secondary)' }}>
+                        &#8226; {renderInlineMarkdown(line.slice(2))}
+                      </p>
+                    )
+                  } else if (line.trim() === '') {
+                    elements.push(<div key={i} style={{ height: 8 }} />)
+                  } else {
+                    elements.push(<p key={i} style={{ marginBottom: 8, color: 'var(--text-secondary)' }}>{renderInlineMarkdown(line)}</p>)
+                  }
+                  i++
                 }
-                if (line.startsWith('### ')) {
-                  return <h3 key={i}>{renderInlineMarkdown(line.replace('### ', ''))}</h3>
-                }
-                if (line.startsWith('- ')) {
-                  const text = line.slice(2)
-                  return (
-                    <p key={i} style={{ marginLeft: 16, marginBottom: 4, color: 'var(--text-secondary)' }}>
-                      &#8226; {renderInlineMarkdown(text)}
-                    </p>
-                  )
-                }
-                if (line.trim() === '') return <div key={i} style={{ height: 8 }} />
-                return <p key={i} style={{ marginBottom: 8, color: 'var(--text-secondary)' }}>{renderInlineMarkdown(line)}</p>
-              })}
+                return elements
+              })()}
             </div>
 
             {/* 페이지네이션 */}
