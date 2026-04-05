@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { languages, getExercises } from '../../data/coding-exercises'
-import CodeEditor from './CodeEditor'
+import CodeEditor from '../../components/coding-lab/CodeEditor'
 
 export default function CodingExercise() {
   const { language } = useParams()

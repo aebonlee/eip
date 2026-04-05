@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getShortAnswerQuestions, getCertName } from '../../data/practical-exam-data'
-import ProgressBar from '../ui/ProgressBar'
+import ProgressBar from '../../components/ui/ProgressBar'
 
 export default function ShortAnswer() {
   const { certType = 'engineer' } = useParams()

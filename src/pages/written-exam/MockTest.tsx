@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { certTypes, getMockTestQuestions, getWrittenRoundQuestions } from '../../data/written-exam-data'
 import { useAuth } from '../../contexts/AuthContext'
 import { sb_saveTestResult } from '../../lib/supabase'
-import Timer from '../ui/Timer'
+import Timer from '../../components/ui/Timer'
 
 interface MockQuestion {
   id: number

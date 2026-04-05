@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { getCertName, getPracticalRoundQuestions } from '../../data/practical-exam-data'
 import { useAuth } from '../../contexts/AuthContext'
 import { sb_saveTestResult } from '../../lib/supabase'
-import Timer from '../ui/Timer'
+import Timer from '../../components/ui/Timer'
 
 const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/;$/, '')
 
