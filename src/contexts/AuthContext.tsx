@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import type { User } from '@supabase/supabase-js'
-import { supabase, sb_getProfile, sb_upsertProfile } from '../lib/supabase'
+import { supabase, sb_getProfile, sb_upsertProfile, setSharedSession, getSharedSession, clearSharedSession } from '../lib/supabase'
 
 interface Profile {
   id: string
@@ -45,16 +45,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const clearAccountBlock = useCallback(() => setAccountBlock(null), [])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null)
       if (session?.user) {
+        if (session.refresh_token) setSharedSession(session.refresh_token)
         loadProfile(session.user)
+      } else {
+        const rt = getSharedSession()
+        if (rt) {
+          try {
+            const { data } = await supabase.auth.refreshSession({ refresh_token: rt })
+            if (!data.session) clearSharedSession()
+          } catch { clearSharedSession() }
+        }
       }
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (session?.refresh_token) setSharedSession(session.refresh_token)
+        if (_event === 'SIGNED_OUT') clearSharedSession()
+
         setUser(session?.user ?? null)
         if (session?.user) {
           if (_event === 'SIGNED_IN') {
