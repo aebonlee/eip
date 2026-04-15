@@ -1,6 +1,10 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import AdminGuard from './components/AdminGuard'
 import Layout from './components/layout/Layout'
+
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/auth/LoginPage'
 import AuthCallback from './pages/auth/AuthCallback'
@@ -69,6 +73,9 @@ function App() {
 
           {/* 마이페이지 */}
           <Route path="mypage" element={<MyPage />} />
+
+          {/* Admin */}
+          <Route path="admin" element={<AdminGuard><Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}><div className="loading-spinner" /></div>}><AdminDashboard /></Suspense></AdminGuard>} />
 
           {/* 404 */}
           <Route path="*" element={

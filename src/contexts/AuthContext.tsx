@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase, sb_getProfile, sb_upsertProfile, setSharedSession, getSharedSession, clearSharedSession } from '../lib/supabase'
+import { ADMIN_EMAILS } from '../config/admin'
 
 interface Profile {
   id: string
@@ -20,6 +21,7 @@ interface AuthContextValue {
   user: User | null
   profile: Profile | null
   loading: boolean
+  isAdmin: boolean
   accountBlock: AccountBlock | null
   clearAccountBlock: () => void
   signInWithGoogle: () => Promise<void>
@@ -148,10 +150,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(null)
   }
 
+  const allEmails = [
+    user?.email,
+    (user as any)?.user_metadata?.email,
+    (user as any)?.identities?.[0]?.identity_data?.email,
+  ].filter(Boolean).map((e: any) => e.toLowerCase())
+  const isAdmin = allEmails.some((e: string) => ADMIN_EMAILS.includes(e))
+
   const value: AuthContextValue = {
     user,
     profile,
     loading,
+    isAdmin,
     accountBlock,
     clearAccountBlock,
     signInWithGoogle,
