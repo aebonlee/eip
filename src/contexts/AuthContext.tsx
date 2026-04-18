@@ -3,6 +3,7 @@ import type { User } from '@supabase/supabase-js'
 import { supabase, sb_getProfile, sb_upsertProfile, setSharedSession, getSharedSession, clearSharedSession } from '../lib/supabase'
 import { ADMIN_EMAILS } from '../config/admin'
 import { useIdleTimeout } from '../hooks/useIdleTimeout';
+import ProfileCompleteModal from '../components/ProfileCompleteModal';
 
 interface Profile {
   id: string
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [accountBlock, setAccountBlock] = useState<AccountBlock | null>(null)
+  const [_userProfile, _setUserProfile] = useState<any>(null)
 
   const clearAccountBlock = useCallback(() => setAccountBlock(null), [])
 
@@ -102,6 +104,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: created } = await sb_upsertProfile(newProfile)
       setProfile(created as Profile)
     }
+
+    // user_profiles 이중 기록 (글로벌 회원 가시성)
+    try {
+      const meta = authUser.user_metadata || {}
+      const currentDomain = window.location.hostname
+      await supabase.from('user_profiles').upsert({
+        id: authUser.id,
+        email: authUser.email || '',
+        name: meta.full_name || meta.name || '',
+        display_name: meta.full_name || meta.name || '',
+        provider: authUser.app_metadata?.provider || 'email',
+        signup_domain: currentDomain,
+        visited_sites: [currentDomain],
+        role: 'member',
+      }, { onConflict: 'id' })
+    } catch (err) {
+      console.warn('user_profiles upsert 실패:', err)
+    }
+
+    // user_profiles 프로필 로드 (프로필 완성 체크용)
+    try {
+      const { data: up } = await supabase.from('user_profiles').select('name,phone').eq('id', authUser.id).maybeSingle()
+      _setUserProfile(up)
+    } catch { _setUserProfile(null) }
 
     // 계정 상태 체크 (check_user_status는 user_profiles 기반)
     try {
@@ -181,9 +207,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   },
   });
 
+  const refreshProfile = useCallback(async () => {
+    try {
+      const { data: up } = await supabase.from('user_profiles').select('name,phone').eq('id', user!.id).maybeSingle()
+      _setUserProfile(up)
+    } catch { _setUserProfile(null) }
+  }, [user])
+  const needsProfileCompletion = !!user && !!_userProfile && (!_userProfile.name || !_userProfile.phone)
+
   return (
     <AuthContext.Provider value={value}>
       {children}
+      {needsProfileCompletion && (
+        <ProfileCompleteModal user={user!} onComplete={refreshProfile} />
+      )}
     </AuthContext.Provider>
   )
 }
