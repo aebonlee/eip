@@ -85,16 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     )
 
-
-  // 10분 무동작 세션 타임아웃
-  useIdleTimeout({
-    enabled: !!user,
-    onTimeout: () => {
-      supabase.auth.signOut();
-      clearSharedSession();
-    },
-  });
-
     return () => subscription.unsubscribe()
   }, [])
 
@@ -180,6 +170,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     loadProfile,
   }
+
+
+  // 10분 무동작 세션 타임아웃
+  useIdleTimeout({
+  enabled: !!user,
+  onTimeout: () => {
+  supabase.auth.signOut();
+  clearSharedSession();
+  },
+  });
 
   return (
     <AuthContext.Provider value={value}>
