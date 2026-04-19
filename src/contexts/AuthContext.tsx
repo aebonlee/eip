@@ -213,7 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       _setUserProfile(up)
     } catch { _setUserProfile(null) }
   }, [user])
-  const needsProfileCompletion = !!user && !!_userProfile && (!_userProfile.name || !_userProfile.phone)
+  const needsProfileCompletion = !!user && !!_userProfile && !_userProfile.name
 
   return (
     <AuthContext.Provider value={value}>
