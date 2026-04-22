@@ -5,6 +5,7 @@ import { ADMIN_EMAILS } from '../config/admin'
 import { useIdleTimeout } from '../hooks/useIdleTimeout';
 import ProfileCompleteModal from '../components/ProfileCompleteModal';
 
+import PaymentNudgePopup from '../components/PaymentNudgePopup';
 interface Profile {
   id: string
   nickname?: string
@@ -221,6 +222,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {needsProfileCompletion && (
         <ProfileCompleteModal user={user!} onComplete={refreshProfile} />
       )}
+    {isLoggedIn && user && !needsProfileCompletion && (
+      <PaymentNudgePopup user={user} siteSlug="eip" />
+    )}
     </AuthContext.Provider>
   )
 }
