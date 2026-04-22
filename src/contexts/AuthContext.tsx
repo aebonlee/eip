@@ -222,7 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {needsProfileCompletion && (
         <ProfileCompleteModal user={user!} onComplete={refreshProfile} />
       )}
-    {isLoggedIn && user && !needsProfileCompletion && (
+    {!!user && !needsProfileCompletion && (
       <PaymentNudgePopup user={user} siteSlug="eip" />
     )}
     </AuthContext.Provider>
