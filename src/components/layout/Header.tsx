@@ -164,6 +164,10 @@ const megaMenuData: MegaMenuItem[] = [
     ],
   },
   {
+    label: '시험 정보',
+    path: '/exam-info',
+  },
+  {
     label: '커뮤니티',
     path: '/community',
   },
