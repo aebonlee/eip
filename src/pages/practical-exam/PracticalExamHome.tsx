@@ -1,5 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getCertName, getSQLQuestions, getAlgorithmQuestions, getShortAnswerQuestions } from '../../data/practical-exam-data'
+import { theoryAreas } from '../../data/practical-theory'
+import { codeReadingLanguages } from '../../data/code-reading'
 
 export default function PracticalExamHome() {
   const { certType = 'engineer' } = useParams()
@@ -8,8 +10,26 @@ export default function PracticalExamHome() {
   const sqlCount = getSQLQuestions(certType).length
   const algoCount = getAlgorithmQuestions(certType).length
   const shortCount = getShortAnswerQuestions(certType).length
+  const theoryChapterCount = theoryAreas.reduce((sum, a) => sum + a.chapters.length, 0)
+  const codeReadingCount = codeReadingLanguages.reduce((sum, l) => sum + l.questions.length, 0)
 
   const practicalSections = [
+    {
+      path: `/practical-exam/${certType}/theory`,
+      title: '실기 이론',
+      description: 'SW설계·SW개발·DB·네트워크·보안 5개 영역 핵심 이론',
+      icon: 'fa-solid fa-book',
+      color: '#8B5CF6',
+      count: `${theoryChapterCount}개 챕터`,
+    },
+    {
+      path: `/practical-exam/${certType}/code-reading/c`,
+      title: '코드 결과 예측',
+      description: 'C·Java·Python·SQL 코드를 읽고 출력 결과 맞히기',
+      icon: 'fa-solid fa-magnifying-glass-chart',
+      color: '#EF4444',
+      count: `${codeReadingCount}문제`,
+    },
     {
       path: `/practical-exam/${certType}/sql`,
       title: 'SQL 실습',

@@ -57,6 +57,8 @@ const megaMenuData: MegaMenuItem[] = [
         title: '실기시험',
         items: [
           { label: '실기 모의시험', path: '/practical-exam/engineer/rounds', highlight: true },
+          { label: '실기 이론', path: '/practical-exam/engineer/theory' },
+          { label: '코드 결과 예측', path: '/practical-exam/engineer/code-reading/c' },
           { label: 'SQL 실습', path: '/practical-exam/engineer/sql' },
           { label: '알고리즘', path: '/practical-exam/engineer/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/engineer/short-answer' },
@@ -97,6 +99,8 @@ const megaMenuData: MegaMenuItem[] = [
         title: '실기시험',
         items: [
           { label: '실기 모의시험', path: '/practical-exam/industrial/rounds', highlight: true },
+          { label: '실기 이론', path: '/practical-exam/industrial/theory' },
+          { label: '코드 결과 예측', path: '/practical-exam/industrial/code-reading/c' },
           { label: 'SQL 실습', path: '/practical-exam/industrial/sql' },
           { label: '알고리즘', path: '/practical-exam/industrial/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/industrial/short-answer' },
@@ -136,6 +140,8 @@ const megaMenuData: MegaMenuItem[] = [
         title: '실기시험',
         items: [
           { label: '실기 모의시험', path: '/practical-exam/functional/rounds', highlight: true },
+          { label: '실기 이론', path: '/practical-exam/functional/theory' },
+          { label: '코드 결과 예측', path: '/practical-exam/functional/code-reading/c' },
           { label: 'SQL 실습', path: '/practical-exam/functional/sql' },
           { label: '알고리즘', path: '/practical-exam/functional/algorithm' },
           { label: '단답형 연습', path: '/practical-exam/functional/short-answer' },

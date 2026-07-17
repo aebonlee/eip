@@ -21,6 +21,10 @@ import PracticalTestResult from './pages/practical-exam/PracticalTestResult'
 import SQLPractice from './pages/practical-exam/SQLPractice'
 import AlgorithmPractice from './pages/practical-exam/AlgorithmPractice'
 import ShortAnswer from './pages/practical-exam/ShortAnswer'
+import PracticalTheoryHome from './pages/practical-exam/PracticalTheoryHome'
+import PracticalTheoryStudy from './pages/practical-exam/PracticalTheoryStudy'
+import CodeReadingPractice from './pages/practical-exam/CodeReadingPractice'
+import ExamInfoPage from './pages/exam-info/ExamInfoPage'
 import CodingLabHome from './pages/coding-lab/CodingLabHome'
 import CodingExercise from './pages/coding-lab/CodingExercise'
 import LecturesHome from './pages/lectures/LecturesHome'
@@ -56,6 +60,10 @@ function App() {
           <Route path="practical-exam/:certType/sql" element={<SQLPractice />} />
           <Route path="practical-exam/:certType/algorithm" element={<AlgorithmPractice />} />
           <Route path="practical-exam/:certType/short-answer" element={<ShortAnswer />} />
+          <Route path="practical-exam/:certType/theory" element={<PracticalTheoryHome />} />
+          <Route path="practical-exam/:certType/theory/:areaId" element={<PracticalTheoryStudy />} />
+          <Route path="practical-exam/:certType/code-reading" element={<CodeReadingPractice />} />
+          <Route path="practical-exam/:certType/code-reading/:language" element={<CodeReadingPractice />} />
 
           {/* 코딩실습 */}
           <Route path="coding-lab" element={<CodingLabHome />} />
@@ -67,6 +75,9 @@ function App() {
 
           {/* 자격증 소개 */}
           <Route path="cert-intro" element={<CertIntroPage />} />
+
+          {/* 시험 정보 */}
+          <Route path="exam-info" element={<ExamInfoPage />} />
 
           {/* 커뮤니티 */}
           <Route path="community" element={<CommunityPage />} />
