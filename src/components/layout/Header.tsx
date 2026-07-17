@@ -256,10 +256,15 @@ export default function Header() {
       <div className="container nav-wrapper">
         {/* Logo */}
         <Link to="/" className="nav-logo">
-          <div className="nav-logo-icon">EIP</div>
-          <h1>
+          <div className="nav-logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="8 6 3 12 8 18" />
+              <polyline points="16 6 21 12 16 18" />
+            </svg>
+          </div>
+          <h1 className="nav-brand">
             <span className="brand-eip">EIP</span>
-            <span className="brand-study"> 학습</span>
+            <span className="brand-sub">정보처리 학습센터</span>
           </h1>
         </Link>
 

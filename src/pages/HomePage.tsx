@@ -6,40 +6,63 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section — 좌측 카피 + 우측 청사진 아트 */}
       <section className="hero">
-        <div className="hero-particles">
-          <div className="particle" style={{ width: 6, height: 6, top: '20%', left: '10%', '--duration': '15s', '--delay': '0s' } as React.CSSProperties} />
-          <div className="particle" style={{ width: 4, height: 4, top: '60%', left: '80%', '--duration': '20s', '--delay': '5s' } as React.CSSProperties} />
-          <div className="particle" style={{ width: 8, height: 8, top: '40%', left: '50%', '--duration': '18s', '--delay': '2s' } as React.CSSProperties} />
-          <div className="particle" style={{ width: 5, height: 5, top: '80%', left: '30%', '--duration': '22s', '--delay': '8s' } as React.CSSProperties} />
-          <div className="code-line" style={{ top: '15%', right: '5%', '--delay': '0s' } as React.CSSProperties}>SELECT * FROM subjects</div>
-          <div className="code-line" style={{ top: '45%', right: '10%', '--delay': '5s' } as React.CSSProperties}>def solution(n):</div>
-          <div className="code-line" style={{ top: '75%', right: '3%', '--delay': '10s' } as React.CSSProperties}>int main() {'{'} return 0; {'}'}</div>
-        </div>
-
         <div className="hero-container">
-          <div className="hero-content">
-            <div className="hero-badge">
-              <span>2026 최신 기출 반영</span>
+          <div className="hero-grid">
+            <div className="hero-content">
+              <p className="hero-eyeline">INFORMATION PROCESSING &middot; 2026 최신 출제기준</p>
+              <h1 className="hero-title">
+                정보처리 자격증,<br />
+                <span className="marker">합격까지 한 곳에서</span>
+              </h1>
+              <p className="hero-description">
+                정보처리기사 · 산업기사 · 프로그래밍기능사<br />
+                필기 이론과 CBT 모의시험, 실기 이론 · 코드 결과 예측 · 코딩 실습까지
+              </p>
+              <div className="hero-buttons">
+                {user ? (
+                  <Link to="/written-exam" className="btn btn-primary btn-lg">학습 시작하기</Link>
+                ) : (
+                  <>
+                    <Link to="/login" className="btn btn-primary btn-lg">무료로 시작하기</Link>
+                    <Link to="/written-exam" className="btn btn-secondary btn-lg">둘러보기</Link>
+                  </>
+                )}
+              </div>
             </div>
-            <h1 className="hero-title">
-              <span className="highlight">정보처리</span> 자격증<br />
-              종합 학습 플랫폼
-            </h1>
-            <p className="hero-description">
-              정보처리기사 · 산업기사 · 프로그래밍기능사<br />
-              필기/실기 이론학습부터 CBT 모의시험, 코딩실습까지 한 곳에서
-            </p>
-            <div className="hero-buttons">
-              {user ? (
-                <Link to="/written-exam" className="btn btn-primary btn-lg">학습 시작하기</Link>
-              ) : (
-                <>
-                  <Link to="/login" className="btn btn-primary btn-lg">무료로 시작하기</Link>
-                  <Link to="/written-exam" className="btn btn-secondary btn-lg">둘러보기</Link>
-                </>
-              )}
+
+            <div className="hero-art" aria-hidden>
+              {/* 팔레트 색으로만 그린 SVG — 청사진 모눈 위 코드 괄호와 상승 체크 곡선 */}
+              <svg viewBox="0 0 400 400" className="hero-svg">
+                <defs>
+                  <linearGradient id="heroWash" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.10" />
+                    <stop offset="1" stopColor="#FFFFFF" stopOpacity="0.02" />
+                  </linearGradient>
+                </defs>
+                <circle cx="200" cy="200" r="172" fill="url(#heroWash)" />
+                {/* 모눈 (blueprint grid) */}
+                <g stroke="#FFFFFF" strokeOpacity="0.12" strokeWidth="1">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <line key={'h' + i} x1="40" y1={60 + i * 35} x2="360" y2={60 + i * 35} />
+                  ))}
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <line key={'v' + i} x1={60 + i * 35} y1="40" x2={60 + i * 35} y2="360" />
+                  ))}
+                </g>
+                {/* 코드 괄호 */}
+                <g stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                  <polyline points="130,140 90,200 130,260" />
+                  <polyline points="270,140 310,200 270,260" />
+                </g>
+                {/* 상승 곡선 + 합격 체크 */}
+                <path d="M140 290 C 175 275, 195 235, 215 195" fill="none"
+                  stroke="var(--accent, #FFD43B)" strokeWidth="7" strokeLinecap="round" />
+                <path d="M215 195 L 237 218 L 285 150" fill="none"
+                  stroke="var(--accent, #FFD43B)" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="140" cy="290" r="8" fill="var(--accent, #FFD43B)" />
+              </svg>
             </div>
           </div>
         </div>

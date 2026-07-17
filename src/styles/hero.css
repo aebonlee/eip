@@ -18,29 +18,33 @@
   padding: 0 24px;
 }
 
+/* 좌 카피 / 우 아트 2단 그리드 */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+}
+
 .hero-content {
   max-width: 640px;
 }
 
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-full);
+/* 아이라인 — 모노 폰트 소제목 */
+.hero-eyeline {
+  font-family: var(--font-code, 'JetBrains Mono', monospace);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--accent-light);
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 24px;
-  backdrop-filter: blur(8px);
+  margin-bottom: 20px;
 }
 
 .hero-title {
   font-size: 56px;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.2;
   color: white;
   letter-spacing: -0.03em;
   margin-bottom: 24px;
@@ -51,6 +55,37 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* 형광펜 시그니처 — 글자 아래를 쓸고 지나가는 마커 */
+.marker {
+  position: relative;
+  white-space: nowrap;
+  background-image: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, var(--accent, #FFD43B) 80%, transparent) 58%,
+    color-mix(in srgb, var(--accent, #FFD43B) 80%, transparent) 94%,
+    transparent 94%
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  animation: marker-sweep 0.9s ease-out 0.5s forwards;
+}
+
+@keyframes marker-sweep {
+  to { background-size: 100% 100%; }
+}
+
+/* 우측 청사진 아트 */
+.hero-art {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-svg {
+  width: min(100%, 420px);
+  height: auto;
+  animation: fadeInUp 0.8s ease 0.2s both;
 }
 
 .hero-description {
@@ -346,6 +381,9 @@
 /* Responsive */
 @media (max-width: 1024px) {
   .hero-title { font-size: 44px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero-art { order: -1; }
+  .hero-svg { width: min(60%, 300px); }
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .path-grid { grid-template-columns: repeat(2, 1fr); }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -354,6 +392,7 @@
 @media (max-width: 768px) {
   .hero-title { font-size: 36px; }
   .hero-description { font-size: 16px; }
+  .hero-svg { width: min(70%, 240px); }
   .features-grid, .path-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .section-title { font-size: 28px; }
