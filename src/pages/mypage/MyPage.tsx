@@ -3,6 +3,9 @@ import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { sb_getTestResults, sb_getCodeSubmissions } from '../../lib/supabase'
 import PassPrediction from './PassPrediction'
+import { useStudyProgress } from '../../hooks/useStudyProgress'
+import { theoryAreas } from '../../data/practical-theory'
+import { codingAreas } from '../../data/coding-theory'
 
 interface TestResult {
   id: string
@@ -22,6 +25,59 @@ interface CodeSubmission {
   submitted_at: string
   is_correct: boolean
   [key: string]: unknown
+}
+
+function StudyProgressPanel({ certType }: { certType: string }) {
+  const { completedKeys, loaded } = useStudyProgress(certType)
+
+  const sections = [
+    { title: '실기 이론', areas: theoryAreas, basePath: `/practical-exam/${certType}/theory` },
+    { title: '코딩 이론', areas: codingAreas, basePath: `/practical-exam/${certType}/coding-theory` },
+  ]
+
+  if (!loaded) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
+        <div className="animate-spin" style={{ width: 28, height: 28, border: '3px solid var(--border-light)', borderTopColor: 'var(--primary)', borderRadius: '50%' }} />
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {sections.map(section => {
+        const totalChapters = section.areas.reduce((sum, a) => sum + a.chapters.length, 0)
+        const totalDone = section.areas.reduce(
+          (sum, a) => sum + a.chapters.filter(ch => completedKeys.has(`${a.id}/${ch.id}`)).length, 0)
+        return (
+          <div key={section.title} className="card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <h3 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>{section.title}</h3>
+              <span className="path-card-tag">{totalDone}/{totalChapters} 챕터 완료</span>
+            </div>
+            {section.areas.map(area => {
+              const done = area.chapters.filter(ch => completedKeys.has(`${area.id}/${ch.id}`)).length
+              const pct = Math.round((done / area.chapters.length) * 100)
+              return (
+                <Link key={area.id} to={`${section.basePath}/${area.id}`} style={{ display: 'block', marginBottom: 14, textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span style={{ fontSize: 14, fontWeight: 500 }}>
+                      <i className={area.icon} style={{ marginRight: 8, color: 'var(--primary)', width: 18, textAlign: 'center' }}></i>
+                      {area.name}
+                    </span>
+                    <span style={{ fontSize: 13, color: 'var(--text-light)' }}>{done}/{area.chapters.length} ({pct}%)</span>
+                  </div>
+                  <div className="quiz-progress-bar" style={{ margin: 0 }}>
+                    <div className="quiz-progress-fill" style={{ width: `${pct}%` }} />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function MyPage() {
@@ -55,6 +111,7 @@ export default function MyPage() {
 
   const tabs = [
     { id: 'overview', label: '개요' },
+    { id: 'progress', label: '학습 진도' },
     { id: 'tests', label: '시험 결과' },
     { id: 'prediction', label: '합격 예측' },
     { id: 'coding', label: '코딩 이력' },
@@ -133,6 +190,11 @@ export default function MyPage() {
               </div>
             </div>
           </>
+        )}
+
+        {/* 학습 진도 탭 */}
+        {activeTab === 'progress' && (
+          <StudyProgressPanel certType={targetCert} />
         )}
 
         {/* 시험 결과 탭 */}

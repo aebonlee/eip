@@ -7,8 +7,8 @@ import Timer from '../../components/ui/Timer'
 
 const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/;$/, '')
 
-const typeLabels: Record<string, string> = { sql: 'SQL', algorithm: '알고리즘', short: '단답형' }
-const typeColors: Record<string, string> = { sql: '#3B82F6', algorithm: '#10B981', short: '#F59E0B' }
+const typeLabels: Record<string, string> = { sql: 'SQL', algorithm: '알고리즘', short: '단답형', code: '코드 결과' }
+const typeColors: Record<string, string> = { sql: '#3B82F6', algorithm: '#10B981', short: '#F59E0B', code: '#EF4444' }
 
 interface PracticalQuestion {
   id: string
@@ -22,6 +22,7 @@ interface PracticalQuestion {
   alternativeAnswers: string[]
   explanation?: string
   tableSchema?: string
+  code?: string
 }
 
 export default function PracticalMockTest() {
@@ -66,7 +67,7 @@ export default function PracticalMockTest() {
     setSubmitted(true)
 
     let score = 0
-    const typeScores: Record<string, { correct: number; total: number }> = { sql: { correct: 0, total: 0 }, algorithm: { correct: 0, total: 0 }, short: { correct: 0, total: 0 } }
+    const typeScores: Record<string, { correct: number; total: number }> = { code: { correct: 0, total: 0 }, sql: { correct: 0, total: 0 }, algorithm: { correct: 0, total: 0 }, short: { correct: 0, total: 0 } }
 
     questions.forEach(q => {
       const correct = checkAnswer(q, answers[q.id])
@@ -115,7 +116,7 @@ export default function PracticalMockTest() {
               <span style={{ fontSize: 36 }}><i className="fa-solid fa-laptop-code"></i></span>
             </div>
             <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>{roundNumber}회차 실기 모의시험</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 4 }}>SQL 7 + 알고리즘 6 + 단답형 7 = 20문항 | 60분</p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 4 }}>코드 결과 6 + SQL 5 + 알고리즘 4 + 단답형 5 = 20문항 | 60분</p>
             <p style={{ color: 'var(--text-light)', fontSize: 14, marginBottom: 32 }}>직접 답안을 입력하는 실기 시험입니다</p>
             <button className="btn btn-accent btn-lg" onClick={startTest}>시험 시작</button>
           </div>
@@ -178,6 +179,20 @@ export default function PracticalMockTest() {
         </div>
 
         <p className="quiz-question">{q.question}</p>
+
+        {/* 코드 표시 (코드 결과 예측 문제) */}
+        {q.code && (
+          <pre style={{
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border)',
+            borderRadius: 8,
+            padding: 16,
+            overflowX: 'auto',
+            fontSize: 14,
+            lineHeight: 1.6,
+            margin: '12px 0 16px',
+          }}><code>{q.code}</code></pre>
+        )}
 
         {/* 테이블 스키마 표시 (SQL 문제) */}
         {q.tableSchema && (

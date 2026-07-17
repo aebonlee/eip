@@ -23,6 +23,8 @@ import AlgorithmPractice from './pages/practical-exam/AlgorithmPractice'
 import ShortAnswer from './pages/practical-exam/ShortAnswer'
 import PracticalTheoryHome from './pages/practical-exam/PracticalTheoryHome'
 import PracticalTheoryStudy from './pages/practical-exam/PracticalTheoryStudy'
+import CodingTheoryHome from './pages/practical-exam/CodingTheoryHome'
+import CodingTheoryStudy from './pages/practical-exam/CodingTheoryStudy'
 import CodeReadingPractice from './pages/practical-exam/CodeReadingPractice'
 import ExamInfoPage from './pages/exam-info/ExamInfoPage'
 import CodingLabHome from './pages/coding-lab/CodingLabHome'
@@ -62,6 +64,8 @@ function App() {
           <Route path="practical-exam/:certType/short-answer" element={<ShortAnswer />} />
           <Route path="practical-exam/:certType/theory" element={<PracticalTheoryHome />} />
           <Route path="practical-exam/:certType/theory/:areaId" element={<PracticalTheoryStudy />} />
+          <Route path="practical-exam/:certType/coding-theory" element={<CodingTheoryHome />} />
+          <Route path="practical-exam/:certType/coding-theory/:areaId" element={<CodingTheoryStudy />} />
           <Route path="practical-exam/:certType/code-reading" element={<CodeReadingPractice />} />
           <Route path="practical-exam/:certType/code-reading/:language" element={<CodeReadingPractice />} />
 

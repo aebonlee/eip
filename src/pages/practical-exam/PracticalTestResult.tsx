@@ -10,12 +10,13 @@ interface PracticalQuestion {
   alternativeAnswers?: string[]
   explanation: string
   tableSchema?: string
+  code?: string
   [key: string]: unknown
 }
 
 const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/;$/, '')
-const typeLabels: Record<string, string> = { sql: 'SQL', algorithm: '알고리즘', short: '단답형' }
-const typeColors: Record<string, string> = { sql: '#3B82F6', algorithm: '#10B981', short: '#F59E0B' }
+const typeLabels: Record<string, string> = { sql: 'SQL', algorithm: '알고리즘', short: '단답형', code: '코드 결과' }
+const typeColors: Record<string, string> = { sql: '#3B82F6', algorithm: '#10B981', short: '#F59E0B', code: '#EF4444' }
 
 export default function PracticalTestResult() {
   const { certType = 'engineer' } = useParams()
@@ -153,6 +154,19 @@ export default function PracticalTestResult() {
                     </span>
                   </div>
                   <p style={{ fontWeight: 500, marginBottom: 12 }}>{q.question}</p>
+
+                  {q.code && (
+                    <pre style={{
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 8,
+                      padding: 12,
+                      overflowX: 'auto',
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      marginBottom: 12,
+                    }}><code>{q.code}</code></pre>
+                  )}
 
                   <div style={{ fontSize: 14, marginBottom: 8 }}>
                     <p><strong>내 답안:</strong> <span style={{ color: isCorrect ? 'var(--success)' : 'var(--error)' }}>{userAnswer || '(미작성)'}</span></p>

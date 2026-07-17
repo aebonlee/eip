@@ -122,9 +122,26 @@ export default function ExamInfoPage() {
               </table>
             </div>
 
-            <h2 style={{ marginTop: 24 }}>합격률 경향</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              정보처리기사 필기는 절반 안팎이 합격하는 반면, <strong>실기 합격률은 회차에 따라 20% 안팎까지 떨어질 만큼 어렵습니다.</strong>
+            <h2 style={{ marginTop: 24 }}>정보처리기사 실기 회차별 합격률</h2>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="md-table">
+                <thead>
+                  <tr><th>연도</th><th>1회</th><th>2회</th><th>3회</th><th>4회</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>2020</td><td>5.3%</td><td>21.0%</td><td>18.3%</td><td>13.9%</td></tr>
+                  <tr><td>2021</td><td>39.5%</td><td>27.7%</td><td>23.6%</td><td>-</td></tr>
+                  <tr><td>2022</td><td>25.6%</td><td>16.1%</td><td>20.4%</td><td>-</td></tr>
+                  <tr><td>2023</td><td>27.5%</td><td>17.9%</td><td>17.7%</td><td>-</td></tr>
+                  <tr><td>2024</td><td>36.8%</td><td>27.7%</td><td>20.7%</td><td>-</td></tr>
+                  <tr><td>2025</td><td>15.1%</td><td>27.8%</td><td>23.9%</td><td>-</td></tr>
+                  <tr><td>2026</td><td>18.1%</td><td>-</td><td>-</td><td>-</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', marginTop: 12 }}>
+              전체 평균 합격률은 약 22% 수준이며, 가장 최근인 2026년 1회는 응시자 23,898명 중 4,335명이 합격해 18.1%를 기록했습니다.
+              (출처: 한국산업인력공단 국가기술자격 통계)
             </p>
             <p style={{ color: 'var(--text-secondary)' }}>
               실기가 어려운 이유는 명확합니다. 프로그래밍 코드 읽기(C·Java·Python)와 SQL 문제 비중이 크고, 용어를 정확한 명칭으로 직접 써내야 하기 때문입니다.

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getTheoryArea } from '../../data/practical-theory'
+import { getCodingArea } from '../../data/coding-theory'
 import { getCertName } from '../../data/practical-exam-data'
 import MarkdownContent from '../../components/MarkdownContent'
 import { useStudyProgress } from '../../hooks/useStudyProgress'
 
-export default function PracticalTheoryStudy() {
+export default function CodingTheoryStudy() {
   const { certType = 'engineer', areaId = '' } = useParams()
   const certName = getCertName(certType)
-  const area = getTheoryArea(areaId)
+  const area = getCodingArea(areaId)
   const [activeChapter, setActiveChapter] = useState(0)
   const { isCompleted, markCompleted, isLoggedIn } = useStudyProgress(certType)
 
@@ -23,8 +23,8 @@ export default function PracticalTheoryStudy() {
   if (!area) {
     return (
       <div className="container" style={{ textAlign: 'center', padding: '80px 24px' }}>
-        <h2 style={{ marginBottom: 16 }}>존재하지 않는 영역입니다</h2>
-        <Link to={`/practical-exam/${certType}/theory`} className="btn btn-outline">실기 이론으로</Link>
+        <h2 style={{ marginBottom: 16 }}>존재하지 않는 과목입니다</h2>
+        <Link to={`/practical-exam/${certType}/coding-theory`} className="btn btn-outline">코딩 이론으로</Link>
       </div>
     )
   }
@@ -36,7 +36,7 @@ export default function PracticalTheoryStudy() {
       <div className="page-header">
         <div className="container">
           <div className="page-header-breadcrumb">
-            <Link to={`/practical-exam/${certType}`}>{certName} 실기시험</Link> / <Link to={`/practical-exam/${certType}/theory`}>실기 이론</Link> / {area.name}
+            <Link to={`/practical-exam/${certType}`}>{certName} 실기시험</Link> / <Link to={`/practical-exam/${certType}/coding-theory`}>코딩 이론</Link> / {area.name}
           </div>
           <div className="page-header-inner">
             <div className="page-header-icon"><i className={area.icon}></i></div>
