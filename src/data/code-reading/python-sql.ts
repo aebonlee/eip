@@ -387,6 +387,192 @@ print(a, b)`,
       explanation:
         'input()으로 받은 "53t44"를 split("t")가 문자 t를 기준으로 ["53", "44"]로 나누고, map(int, ...)이 각각을 정수 53과 44로 바꿔 a와 b에 나누어 저장합니다. print(a, b)는 여러 값을 공백 한 칸으로 구분해 출력하므로 53 44가 됩니다. split의 기준 문자를 생략하면 공백을 기준으로 나눈다는 것도 함께 기억해 두세요.',
     },
+    // ── 심화 보강분 (py-r25~34, 2026-07-18): 전 문제 python3 실행으로 출력 검증 완료 ──
+    {
+      id: 'py-r25',
+      topic: '딕셔너리·튜플·집합',
+      difficulty: 'medium',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `a = {1, 2, 3, 4}
+b = {3, 4, 5}
+print(sorted(a & b), sorted(a - b))
+print(sorted(a ^ b))
+d = {'x': 1, 'y': 2}
+d['z'] = d.pop('x') + 3
+print(d['z'], len(d))`,
+      answer: '[3, 4] [1, 2]\n[1, 2, 5]\n4 2',
+      alternativeAnswers: ['[3, 4] [1, 2] [1, 2, 5] 4 2', '[3,4] [1,2] [1,2,5] 4 2'],
+      explanation:
+        "집합 연산 기호를 하나씩 풉니다. & 는 교집합이라 a & b = {3, 4}, - 는 차집합이라 a - b = a에만 있는 {1, 2}, ^ 는 대칭차(한쪽에만 있는 것)라 {1, 2, 5}입니다. 집합은 순서가 없으므로 sorted()로 리스트로 바꿔 [3, 4], [1, 2], [1, 2, 5]가 출력됩니다. 딕셔너리 부분: d.pop('x')는 키 'x'를 지우면서 그 값 1을 돌려주므로 d['z'] = 1 + 3 = 4가 되고, d는 {'y': 2, 'z': 4}로 키가 2개입니다. 그래서 마지막 줄은 4 2입니다. pop이 \"지우기만\" 하는 게 아니라 \"값을 돌려준다\"는 것이 함정입니다.",
+    },
+    {
+      id: 'py-r26',
+      topic: '컴프리헨션·람다·내장함수',
+      difficulty: 'medium',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `m = [[1, 2, 3], [4, 5, 6]]
+a = [x for row in m for x in row if x % 2 == 0]
+b = [[x * 2 for x in row] for row in m]
+print(a)
+print(b[1][0])`,
+      answer: '[2, 4, 6]\n8',
+      alternativeAnswers: ['[2, 4, 6] 8', '[2,4,6] 8'],
+      explanation:
+        '컴프리헨션의 for가 두 개면 왼쪽이 바깥 반복, 오른쪽이 안쪽 반복입니다. a는 m의 각 행(row)에서 원소 x를 하나씩 꺼내며 짝수만 모으므로 1~6 중 [2, 4, 6]이 됩니다(이중 리스트가 한 줄로 펴집니다). b는 모양이 다릅니다. 바깥 대괄호 안에 또 컴프리헨션이 있어서 "행마다 새 리스트"를 만들므로 [[2, 4, 6], [8, 10, 12]]로 이중 구조가 유지됩니다. b[1][0]은 두 번째 행의 첫 원소인 8입니다. for 두 개를 나란히 쓰면 평탄화, 대괄호를 겹치면 구조 유지 — 이 차이가 핵심입니다.',
+    },
+    {
+      id: 'py-r27',
+      topic: '문자열 메서드 체인',
+      difficulty: 'medium',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `s = '  Hello,Python,World  '
+t = s.strip().lower().split(',')
+print(t[1])
+print('-'.join(t).upper())
+print(s.strip().replace('o', '0').count('0'))`,
+      answer: 'python\nHELLO-PYTHON-WORLD\n3',
+      alternativeAnswers: ['python HELLO-PYTHON-WORLD 3'],
+      explanation:
+        "메서드가 점(.)으로 이어지면 왼쪽부터 차례로 적용합니다. (1) strip()이 양끝 공백을 지워 'Hello,Python,World', lower()가 소문자로 바꿔 'hello,python,world', split(',')가 콤마 기준으로 ['hello', 'python', 'world']를 만듭니다. t[1]은 'python'입니다. (2) '-'.join(t)는 리스트를 - 로 이어 'hello-python-world', upper()로 대문자가 되어 HELLO-PYTHON-WORLD입니다. (3) 마지막 줄은 소문자로 바꾸지 않은 원본(strip만 적용)에서 소문자 o만 0으로 바꿉니다. Hello의 o, Python의 o, World의 o 세 개가 바뀌므로 count('0')는 3입니다. 대문자 O가 아니라 소문자 o만 바뀐다는 점, 그리고 문자열 메서드는 원본을 바꾸지 않고 새 문자열을 돌려준다는 점이 포인트입니다.",
+    },
+    {
+      id: 'py-r28',
+      topic: '문자열 슬라이싱·인덱싱',
+      difficulty: 'hard',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `a = [10, 20, 30, 40, 50]
+print(a[1:10])
+print(a[::-2])
+print(a[3:1:-1])
+s = 'PYTHON'
+print(s[4:1:-1] + s[-2:])`,
+      answer: '[20, 30, 40, 50]\n[50, 30, 10]\n[40, 30]\nOHTON',
+      alternativeAnswers: ['[20, 30, 40, 50] [50, 30, 10] [40, 30] OHTON', '[20,30,40,50] [50,30,10] [40,30] OHTON'],
+      explanation:
+        '슬라이싱 함정 4연속입니다. (1) a[1:10] : 끝 번호가 길이(5)를 넘어도 오류가 나지 않고 있는 데까지만 잘라 [20, 30, 40, 50]입니다. (2) a[::-2] : 간격이 -2라 맨 뒤에서부터 두 칸씩 거꾸로 → 50, 30, 10. (3) a[3:1:-1] : 3번(40)에서 출발해 거꾸로 가되 끝 번호 1은 포함하지 않으므로 40, 30 두 개만 나옵니다. (4) PYTHON에서 s[4:1:-1]은 4번(O), 3번(H), 2번(T)으로 OHT이고, s[-2:]는 뒤에서 두 글자 ON이라 이어 붙이면 OHTON입니다. 간격이 음수면 시작이 끝보다 커야 하고, 끝 번호는 방향과 상관없이 항상 제외된다는 두 가지가 핵심입니다.',
+    },
+    {
+      id: 'py-r29',
+      topic: '함수·재귀·스코프',
+      difficulty: 'hard',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `def add(x, data=[]):
+    data.append(x)
+    return data
+
+a = add(1)
+b = add(2)
+c = add(3, [])
+print(a)
+print(b)
+print(c)
+print(a is b)`,
+      answer: '[1, 2]\n[1, 2]\n[3]\nTrue',
+      alternativeAnswers: ['[1, 2] [1, 2] [3] True', '[1,2] [1,2] [3] True'],
+      explanation:
+        '기본값 data=[]의 빈 리스트는 "호출할 때마다" 새로 만들어지는 것이 아니라 "함수를 정의할 때 딱 한 번" 만들어져 계속 재사용됩니다. add(1)은 그 공용 리스트에 1을 넣어 [1]을 돌려주고, add(2)는 같은 리스트에 2를 더 넣어 [1, 2]가 됩니다. a와 b는 같은 리스트를 가리키므로 둘 다 [1, 2]로 출력되고 a is b는 True입니다. add(3, [])만 새 리스트를 직접 넘겼기 때문에 c는 [3]입니다. 가변 객체(리스트·딕셔너리)를 기본 인자로 쓰면 호출 사이에 값이 누적되는 이 현상이 파이썬의 대표 함정입니다.',
+    },
+    {
+      id: 'py-r30',
+      topic: '컴프리헨션·람다·내장함수',
+      difficulty: 'medium',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `names = ['kim', 'lee', 'park']
+scores = [80, 95, 70]
+total = 0
+for i, (n, s) in enumerate(zip(names, scores), start=1):
+    if i % 2 == 1:
+        total += s
+print(total)
+print(list(zip(names, scores))[1])`,
+      answer: "150\n('lee', 95)",
+      alternativeAnswers: ["150 ('lee', 95)", "150 ('lee',95)"],
+      explanation:
+        "zip(names, scores)는 두 리스트를 같은 위치끼리 짝지어 ('kim', 80), ('lee', 95), ('park', 70)을 만들고, enumerate(..., start=1)은 여기에 1부터 번호를 붙입니다. 반복을 따라가면 i=1(kim, 80)은 홀수라 total=80, i=2(lee, 95)는 짝수라 건너뛰고, i=3(park, 70)은 홀수라 total=150이 됩니다. 마지막 줄은 zip 결과를 리스트로 바꾼 뒤 1번 인덱스를 꺼내므로 튜플 ('lee', 95)가 그대로 출력됩니다. enumerate의 시작 번호를 start로 바꿀 수 있다는 것과, zip의 결과 하나하나가 튜플이라는 것이 포인트입니다.",
+    },
+    {
+      id: 'py-r31',
+      topic: '클래스',
+      difficulty: 'hard',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `class A:
+    def __init__(self):
+        self.n = 1
+    def show(self):
+        return 'A' + str(self.n)
+
+class B(A):
+    def __init__(self):
+        super().__init__()
+        self.n += 2
+    def show(self):
+        return 'B' + super().show()
+
+b = B()
+print(b.show())
+print(b.n)`,
+      answer: 'BA3\n3',
+      alternativeAnswers: ['BA3 3'],
+      explanation:
+        "b = B()를 만들면 B의 __init__이 실행됩니다. 먼저 super().__init__()이 부모 A의 __init__을 호출해 self.n = 1이 되고, 이어서 self.n += 2로 n은 3이 됩니다(super()는 \"부모 클래스의 메소드를 빌려 쓰는\" 통로입니다). b.show()는 자식 B의 show가 실행되어 'B' 뒤에 super().show(), 즉 부모 A의 show 결과를 붙입니다. 이때 A의 show 안의 self는 여전히 b 자신이므로 self.n은 3이고, 'A' + '3' = 'A3'이 돌아와 최종 BA3이 출력됩니다. 부모 메소드를 호출해도 self는 바뀌지 않는다 — 이것이 상속 문제의 핵심입니다.",
+    },
+    {
+      id: 'py-r32',
+      topic: '예외 처리',
+      difficulty: 'hard',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `def calc(a, b):
+    try:
+        r = a // b
+    except ZeroDivisionError:
+        return 'E'
+    else:
+        return r
+    finally:
+        print('F', end='')
+
+print(calc(7, 2))
+print(calc(5, 0))`,
+      answer: 'F3\nFE',
+      alternativeAnswers: ['F3 FE'],
+      explanation:
+        "try 구문의 네 형제를 정리하면, except는 \"오류가 났을 때\", else는 \"오류가 안 났을 때\", finally는 \"어느 쪽이든 마지막에 반드시\" 실행됩니다. calc(7, 2)는 7 // 2 = 3이 정상 계산되어 else의 return 3으로 가는데, 함수가 값을 돌려주기 \"직전\"에 finally가 먼저 실행되어 F를 출력합니다(end=''라 줄바꿈 없음). 그래서 F 바로 뒤에 print가 3을 붙여 F3이 됩니다. calc(5, 0)은 0으로 나눠 ZeroDivisionError가 나므로 except의 return 'E'로 가고, 역시 finally의 F가 먼저 찍혀 FE가 됩니다. return이 있어도 finally는 건너뛸 수 없다는 것이 이 문제의 전부입니다.",
+    },
+    {
+      id: 'py-r33',
+      topic: '컴프리헨션·람다·내장함수',
+      difficulty: 'hard',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `data = [('kim', 88), ('lee', 92), ('park', 88), ('choi', 95)]
+data.sort(key=lambda x: (-x[1], x[0]))
+print(data[0][0], data[1][0])
+names = sorted(['banana', 'kiwi', 'apple'], key=len)
+print(names)`,
+      answer: "choi lee\n['kiwi', 'apple', 'banana']",
+      alternativeAnswers: ["choi lee ['kiwi', 'apple', 'banana']", "choi lee ['kiwi','apple','banana']"],
+      explanation:
+        'sort의 key는 "무엇을 기준으로 줄 세울지"를 정하는 함수입니다. lambda x: (-x[1], x[0])은 점수에 마이너스를 붙인 값을 1순위, 이름을 2순위로 하는 튜플을 만듭니다. 점수에 -를 붙이면 큰 점수일수록 작은 값이 되어 오름차순 정렬로도 점수 내림차순이 됩니다. 정렬 결과는 choi(95) → lee(92) → kim(88) → park(88, 동점은 이름 오름차순) 순서라 data[0][0]은 choi, data[1][0]은 lee입니다. 두 번째 정렬은 key=len이라 글자 수 기준으로 kiwi(4) → apple(5) → banana(6)이 됩니다. key 함수의 반환값끼리 비교한다는 원리만 잡으면 어떤 변형도 풀 수 있습니다.',
+    },
+    {
+      id: 'py-r34',
+      topic: '함수·재귀·스코프',
+      difficulty: 'medium',
+      question: '다음 코드의 출력 결과를 쓰시오.',
+      code: `a, *b, c = [1, 2, 3, 4, 5]
+print(b, a + c)
+
+def f(*args, **kwargs):
+    return len(args) + len(kwargs)
+
+print(f(1, 2, 3, x=10, y=20))
+x, y = 5, 10
+x, y = y, x + y
+print(x, y)`,
+      answer: '[2, 3, 4] 6\n5\n10 15',
+      alternativeAnswers: ['[2, 3, 4] 6 5 10 15', '[2,3,4] 6 5 10 15'],
+      explanation:
+        '언패킹 3종 세트입니다. (1) a, *b, c = [1, 2, 3, 4, 5] : 별표가 붙은 b가 "남는 것 전부"를 리스트로 가져갑니다. a=1, c=5가 양끝을 먼저 차지하고 b=[2, 3, 4]가 되어, b와 a + c = 6이 출력됩니다. (2) f(1, 2, 3, x=10, y=20) : 위치 인자 1, 2, 3은 args 튜플로(3개), 이름 붙은 인자 x·y는 kwargs 딕셔너리로(2개) 들어가 3 + 2 = 5입니다. (3) x, y = y, x + y : 오른쪽 (10, 5 + 10)이 "먼저 전부 계산"된 뒤 한꺼번에 대입되므로 x=10, y=15입니다. 한 줄 교환·동시 대입은 오른쪽부터 계산된다는 것이 마지막 함정입니다.',
+    },
   ],
 }
 

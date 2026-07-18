@@ -1250,5 +1250,246 @@ public class Main {
       explanation:
         'Java와 C의 차이를 묻는 문제로, 이 코드는 컴파일 오류가 발생합니다. 오류는 두 곳입니다. (1) while (y--) : C에서는 0이 아니면 참으로 취급하지만, Java의 조건식은 반드시 boolean 타입이어야 하므로 int인 y--는 조건이 될 수 없습니다. (2) println("x=" x + " y=" y) : 문자열과 변수를 이을 때는 + 연산자가 필요한데 빠져 있어 문법 오류입니다. while (y-- > 0), "x=" + x + " y=" + y 로 고쳐야 실행되며, 고친 후의 결과는 x=7 y=-1이 됩니다.',
     },
+    // ── 심화 보강분 (java-r25~34, 2026-07-18): 전 문제 javac+java 실행으로 출력 검증 완료 ──
+    {
+      id: 'java-r25',
+      topic: '클래스와 상속',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `class Parent {
+    int x = 10;
+    int get() { return x; }
+}
+class Child extends Parent {
+    int x = 20;
+    int get() { return x; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Parent p = new Child();
+        System.out.println(p.x + " " + p.get());
+    }
+}`,
+      answer: '10 20',
+      alternativeAnswers: ['10, 20'],
+      explanation:
+        'Parent p = new Child(); 처럼 부모 타입 변수에 자식 객체를 담았을 때, "메소드"와 "필드"의 규칙이 서로 다릅니다. 메소드 호출 p.get()은 실제 객체가 무엇인지 실행 중에 확인하는 동적 바인딩이라, 진짜 객체인 Child의 get()이 실행되어 Child의 x인 20이 나옵니다. 반면 필드 접근 p.x는 동적 바인딩이 되지 않고 "변수의 타입"(Parent)을 따라가므로 Parent의 x인 10입니다. 그래서 10 20이 출력됩니다. 오버라이딩은 메소드에만 적용되고 필드는 이름이 같으면 가려질(hiding) 뿐이라는 것이 이 문제의 함정입니다.',
+    },
+    {
+      id: 'java-r26',
+      topic: 'static·생성자',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    static int a = init("a", 1);
+    int b = init("b", 2);
+    static int init(String s, int v) {
+        System.out.print(s);
+        return v;
+    }
+    Main() { System.out.print("c"); }
+    public static void main(String[] args) {
+        System.out.print("m");
+        new Main();
+        new Main();
+    }
+}`,
+      answer: 'ambcbc',
+      alternativeAnswers: [],
+      explanation:
+        '초기화 순서를 세 단계로 나눠 봅니다. (1) static 필드 a는 클래스가 메모리에 올라갈 때 "main보다도 먼저" 딱 한 번 초기화되므로 a가 가장 먼저 출력됩니다. (2) 이어서 main이 시작되어 m이 출력됩니다. (3) new Main()을 할 때마다 인스턴스 필드 b의 초기화(b 출력)가 먼저, 그다음 생성자 본문(c 출력)이 실행됩니다. 객체를 두 번 만들므로 bc가 두 번 반복됩니다. 합치면 a → m → bc → bc, 즉 ambcbc입니다. static은 클래스당 한 번, 인스턴스 필드와 생성자는 객체마다 매번, 그리고 필드 초기화가 생성자 본문보다 먼저라는 세 가지 규칙이 핵심입니다.',
+    },
+    {
+      id: 'java-r27',
+      topic: '배열·문자열',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    static void change(String s, StringBuilder sb) {
+        s = s + "X";
+        sb.append("Y");
+    }
+    public static void main(String[] args) {
+        String s = "AB";
+        StringBuilder sb = new StringBuilder("AB");
+        change(s, sb);
+        System.out.println(s + " " + sb);
+        String t = "AB";
+        System.out.println((s == t) + " " + s.equals(t));
+    }
+}`,
+      answer: 'AB ABY\ntrue true',
+      alternativeAnswers: ['AB ABY true true'],
+      explanation:
+        'String은 불변(immutable)이라 s + "X"는 원본을 바꾸는 것이 아니라 "ABX"라는 새 문자열을 만들어 change 안의 지역 변수 s에만 담습니다. 메소드가 끝나면 그 지역 변수는 사라지므로 main의 s는 그대로 AB입니다. 반면 StringBuilder는 가변이라 sb.append("Y")가 객체 내용 자체를 ABY로 바꾸고, main의 sb도 같은 객체를 가리키므로 변경이 그대로 보입니다. 둘째 줄: "AB" 같은 문자열 리터럴은 상수 풀에 하나만 만들어 공유하므로 s == t는 주소까지 같아 true이고, 내용 비교 equals도 당연히 true입니다. 단, new String("AB")로 만들면 ==는 false가 되므로 문자열 비교는 항상 equals를 쓰는 것이 원칙입니다.',
+    },
+    {
+      id: 'java-r28',
+      topic: '배열·문자열',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        int[] a = {1, 2, 3};
+        int[] b = a;
+        int[] c = a.clone();
+        b[0] = 10;
+        c[2] = 30;
+        System.out.println(a[0] + " " + a[2]);
+        System.out.println(b == a);
+        System.out.println(c == a);
+    }
+}`,
+      answer: '10 3\ntrue\nfalse',
+      alternativeAnswers: ['10 3 true false'],
+      explanation:
+        'int[] b = a; 는 배열을 복사하는 것이 아니라 "같은 배열을 가리키는 이름을 하나 더" 만드는 것입니다. 그래서 b[0] = 10으로 바꾸면 a[0]도 10으로 보입니다(같은 배열이니까요). 반면 a.clone()은 내용이 같은 "새 배열"을 만들므로 c[2] = 30으로 바꿔도 원본 a[2]는 3 그대로입니다. 첫 줄 출력은 10 3입니다. == 는 배열의 내용이 아니라 주소를 비교하므로 b == a는 true(같은 배열), c == a는 false(다른 배열)입니다. 대입은 참조 공유, clone은 복사본 — 이 구분이 배열 문제의 단골 함정입니다.',
+    },
+    {
+      id: 'java-r29',
+      topic: '인터페이스',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `interface Greet {
+    default String hello() { return "IF"; }
+    String name();
+}
+class Kor implements Greet {
+    public String name() { return "KOR"; }
+}
+class Eng implements Greet {
+    public String name() { return "ENG"; }
+    public String hello() { return "HI"; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Greet g1 = new Kor();
+        Greet g2 = new Eng();
+        System.out.println(g1.hello() + g1.name());
+        System.out.println(g2.hello() + g2.name());
+    }
+}`,
+      answer: 'IFKOR\nHIENG',
+      alternativeAnswers: ['IFKOR HIENG'],
+      explanation:
+        '인터페이스의 default 메소드는 "구현 클래스가 안 만들면 대신 쓰이는 기본 구현"입니다. Kor는 hello()를 오버라이딩하지 않았으므로 인터페이스의 기본 구현이 실행되어 IF가 나오고, name()은 자기 것이라 KOR — 합쳐서 IFKOR입니다. Eng는 hello()를 직접 오버라이딩했으므로 자기 것 HI가 우선 실행되어 HIENG이 됩니다. 추상 메소드 name()은 구현 클래스가 반드시 만들어야 하지만 default 메소드는 선택이라는 점, 그리고 오버라이딩하면 항상 클래스 쪽이 이긴다는 점이 출제 포인트입니다.',
+    },
+    {
+      id: 'java-r30',
+      topic: 'Wrapper·오토박싱',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        Integer a = 100, b = 100;
+        Integer c = 200, d = 200;
+        System.out.println(a == b);
+        System.out.println(c == d);
+        System.out.println(c.equals(d));
+        int e = 200;
+        System.out.println(c == e);
+    }
+}`,
+      answer: 'true\nfalse\ntrue\ntrue',
+      alternativeAnswers: ['true false true true'],
+      explanation:
+        'Integer는 int를 감싼 객체(Wrapper)라서 == 는 값이 아니라 객체 주소를 비교합니다. 그런데 Java는 -128~127 범위의 Integer를 미리 만들어 재사용(캐시)하므로, a와 b(100)는 같은 객체를 받아 a == b가 true입니다. 200은 캐시 범위 밖이라 c와 d는 서로 다른 객체가 만들어져 c == d는 false이고, 값 비교인 equals는 true입니다. 마지막 c == e는 한쪽이 기본형 int라서 Integer c가 int로 자동 변환(언박싱)된 뒤 값끼리 비교되어 true입니다. 정리하면: Wrapper끼리 == 는 주소 비교(단, 작은 수는 캐시로 우연히 true), 값 비교는 equals, 기본형이 끼면 값 비교 — 세 가지 경우를 구분하는 문제입니다.',
+    },
+    {
+      id: 'java-r31',
+      topic: '예외 처리',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    static int div(int a, int b) {
+        try {
+            return a / b;
+        } catch (ArithmeticException e) {
+            System.out.print("E");
+            return -1;
+        } finally {
+            System.out.print("F");
+        }
+    }
+    public static void main(String[] args) {
+        System.out.println(div(10, 2));
+        System.out.println(div(5, 0));
+    }
+}`,
+      answer: 'F5\nEF-1',
+      alternativeAnswers: ['F5 EF-1'],
+      explanation:
+        'div(10, 2): try에서 10 / 2 = 5가 정상 계산되어 return 5로 가지만, 값을 돌려주기 직전에 finally가 반드시 실행되어 F를 먼저 출력합니다. 그 뒤 main의 println이 반환값 5를 출력해 첫 줄은 F5입니다. div(5, 0): 0으로 나누는 순간 ArithmeticException이 발생해 catch로 넘어가 E를 출력하고 return -1로 가는데, 역시 finally의 F가 먼저 찍힌 뒤 -1이 출력되어 둘째 줄은 EF-1입니다. return이 있어도, 예외가 나도 finally는 무조건 실행된다 — 그리고 출력 순서는 "함수 안의 print가 먼저, 반환값 출력은 나중"이라는 두 가지를 함께 확인하는 문제입니다.',
+    },
+    {
+      id: 'java-r32',
+      topic: '제네릭',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `class Box<T> {
+    private T item;
+    Box(T item) { this.item = item; }
+    T get() { return item; }
+}
+public class Main {
+    static <T> T first(T[] arr) { return arr[0]; }
+    public static void main(String[] args) {
+        Box<String> b1 = new Box<>("JAVA");
+        Box<Integer> b2 = new Box<>(7);
+        System.out.println(b1.get().length() + b2.get());
+        Integer[] nums = {5, 10, 15};
+        System.out.println(first(nums) + 1);
+    }
+}`,
+      answer: '11\n6',
+      alternativeAnswers: ['11 6'],
+      explanation:
+        '제네릭 Box<T>의 T는 "나중에 정해지는 타입 자리"입니다. Box<String> b1에서는 T가 String이 되어 b1.get()이 문자열 "JAVA"를 돌려주고, length()는 글자 수 4입니다. Box<Integer> b2에서는 T가 Integer라 b2.get()은 7이고, 4 + 7 = 11이 출력됩니다(문자열이 아니라 숫자끼리의 덧셈입니다). 제네릭 메소드 first는 배열의 첫 원소를 그 타입 그대로 돌려주므로 first(nums)는 5이고, 5 + 1 = 6이 출력됩니다. 제네릭은 실행 결과를 바꾸는 문법이 아니라 "타입을 안전하게 고정"하는 장치라서, T에 어떤 타입이 들어갔는지만 정확히 짚으면 됩니다.',
+    },
+    {
+      id: 'java-r33',
+      topic: '연산자·형변환',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        int a = 13, b = 6;
+        int x = (a & b) | (a ^ b);
+        int y = a >> 2;
+        int z = b << 1;
+        System.out.println(x + " " + y + " " + z);
+        int r = (x > 14) ? (y & 1) : (z | 1);
+        System.out.println(r);
+    }
+}`,
+      answer: '15 3 12\n1',
+      alternativeAnswers: ['15 3 12 1'],
+      explanation:
+        '13은 2진수 1101, 6은 0110입니다. a & b(둘 다 1인 자리)는 0100 = 4, a ^ b(서로 다른 자리)는 1011 = 11이고, 둘을 |(하나라도 1)로 합치면 1111 = 15입니다(& 와 ^ 를 | 로 합치면 항상 a | b와 같아집니다). y = 13 >> 2는 오른쪽으로 두 칸 밀어 1101 → 11, 즉 3(13 ÷ 4의 몫)이고, z = 6 << 1은 왼쪽 한 칸이라 1100 = 12(6 × 2)입니다. 첫 줄은 15 3 12입니다. 삼항 연산자에서 x > 14는 15 > 14로 참이므로 앞쪽 y & 1이 선택되고, 3(11)의 마지막 비트는 1이라 r = 1이 출력됩니다. y & 1은 홀수 판별, << 1은 2배, >> n은 2의 n제곱으로 나눈 몫이라는 공식을 세트로 기억해 두세요.',
+    },
+    {
+      id: 'java-r34',
+      topic: '함수와 재귀',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    static int f(int n) {
+        if (n <= 1) return 1;
+        return n * f(n - 2);
+    }
+    static int g(int n) {
+        if (n == 0) return 0;
+        return n % 2 + g(n / 2);
+    }
+    public static void main(String[] args) {
+        System.out.println(f(7));
+        System.out.println(g(13));
+    }
+}`,
+      answer: '105\n3',
+      alternativeAnswers: ['105 3'],
+      explanation:
+        'f는 2씩 줄며 곱하는 재귀입니다. f(7) = 7 × f(5) = 7 × 5 × f(3) = 7 × 5 × 3 × f(1)이고, f(1)은 n <= 1이라 1을 반환하므로 7 × 5 × 3 × 1 = 105입니다(홀수만 곱하는 팩토리얼 변형). g는 2로 나눈 나머지를 더하며 내려가는 재귀로, 사실상 n을 2진수로 바꿨을 때 1의 개수를 셉니다. g(13) = 13 % 2 + g(6) = 1 + (0 + g(3)) = 1 + 0 + (1 + g(1)) = 1 + 0 + 1 + (1 + g(0)) = 1 + 0 + 1 + 1 + 0 = 3입니다. 13의 2진수가 1101이니 1이 세 개 — 검산도 맞습니다. 재귀는 "종료 조건까지 펼쳐 쓴 뒤 거꾸로 계산"하는 것이 정석 풀이법입니다.',
+    },
   ],
 }
