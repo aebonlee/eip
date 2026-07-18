@@ -96,6 +96,32 @@
   line-height: 1.7;
 }
 
+.hero-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: -20px 0 32px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hero-badge i {
+  color: var(--accent, #FFD43B);
+  font-size: 12px;
+}
+
 .hero-buttons {
   display: flex;
   gap: 16px;
@@ -189,8 +215,19 @@
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+}
+
+a.feature-card {
+  display: block;
+  cursor: pointer;
+}
+
+a.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary, #3B82F6);
+  box-shadow: 0 12px 28px rgba(30, 58, 138, 0.12);
 }
 
 .feature-card {
@@ -402,4 +439,5 @@
   .hero-title { font-size: 28px; }
   .hero-buttons { flex-direction: column; }
   .hero-buttons .btn { width: 100%; }
+  .hero-badge { font-size: 12px; padding: 6px 11px; }
 }

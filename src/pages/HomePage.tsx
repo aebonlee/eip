@@ -18,8 +18,13 @@ export default function HomePage() {
               </h1>
               <p className="hero-description">
                 정보처리기사 · 산업기사 · 프로그래밍기능사<br />
-                필기 이론과 CBT 모의시험, 실기 이론 · 코드 결과 예측 · 코딩 실습까지
+                필기 이론과 CBT 모의시험, 실기 이론 · 코드 결과 예측 · 계산 문제 특강 · 코딩 실습까지
               </p>
+              <div className="hero-badges" aria-label="사이트 특징">
+                <span className="hero-badge"><i className="fa-solid fa-circle-check"></i> 코드 문제 전량 실행 검증</span>
+                <span className="hero-badge"><i className="fa-solid fa-bolt"></i> 2026 출제기준 반영</span>
+                <span className="hero-badge"><i className="fa-solid fa-layer-group"></i> 이론 200챕터 · 문제 1,200+</span>
+              </div>
               <div className="hero-buttons">
                 {user ? (
                   <Link to="/written-exam" className="btn btn-primary btn-lg">학습 시작하기</Link>
@@ -73,10 +78,10 @@ export default function HomePage() {
         <div className="container">
           <div className="stats-grid">
             {[
-              { number: '50+', label: '이론 챕터' },
-              { number: '500+', label: 'CBT 문제' },
-              { number: '30+', label: '코딩 실습' },
-              { number: '20+', label: '영상 강의' },
+              { number: '200+', label: '이론 챕터' },
+              { number: '757', label: 'CBT 필기 문제' },
+              { number: '390+', label: '실기 문제' },
+              { number: '132', label: '코드 결과 예측' },
             ].map(stat => (
               <div key={stat.label}>
                 <span className="stat-number">{stat.number}</span>
@@ -94,18 +99,20 @@ export default function HomePage() {
           <p className="section-subtitle">다양한 학습 도구로 효율적으로 공부하세요</p>
           <div className="features-grid">
             {[
-              { icon: 'fa-solid fa-file-pen', title: '필기시험 학습', desc: '과목별 이론 정리와 CBT 모의시험으로 필기시험 완벽 대비', color: '#3B82F6' },
-              { icon: 'fa-solid fa-laptop-code', title: '실기시험 학습', desc: 'SQL, 알고리즘, 단답형 문제로 실기시험 실전 연습', color: '#10B981' },
-              { icon: 'fa-solid fa-code', title: '코딩 실습', desc: 'C, Java, Python 온라인 코드 에디터로 직접 코딩', color: '#06B6D4' },
-              { icon: 'fa-solid fa-graduation-cap', title: '온라인 강의', desc: '유튜브 강의를 카테고리별로 정리하여 제공', color: '#D97706' },
+              { icon: 'fa-solid fa-file-pen', title: '필기시험 학습', desc: '과목별 이론 정리와 CBT 모의시험으로 필기시험 완벽 대비', color: '#3B82F6', path: '/written-exam' },
+              { icon: 'fa-solid fa-laptop-code', title: '실기 이론 · 문제', desc: 'SQL · 알고리즘 · 단답형에 계산 문제 특강까지 실기 전 유형 연습', color: '#10B981', path: '/practical-exam/engineer/theory' },
+              { icon: 'fa-solid fa-magnifying-glass-chart', title: '코드 결과 예측', desc: 'C · Java · Python · SQL 코드를 읽고 출력을 맞히는 실전 훈련', color: '#8B5CF6', path: '/practical-exam/engineer/code-reading' },
+              { icon: 'fa-solid fa-code', title: '코딩 실습', desc: 'C, Java, Python 온라인 코드 에디터로 직접 코딩', color: '#06B6D4', path: '/coding-lab' },
+              { icon: 'fa-solid fa-graduation-cap', title: '온라인 강의', desc: '유튜브 강의를 카테고리별로 정리하여 제공', color: '#D97706', path: '/lectures' },
+              { icon: 'fa-solid fa-calendar-check', title: '시험 정보', desc: '2026 시험 일정 · 합격 기준 · 연도별 합격률까지 한눈에', color: '#EF4444', path: '/exam-info' },
             ].map(f => (
-              <div className="feature-card" key={f.title}>
+              <Link to={f.path} className="feature-card" key={f.title} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="feature-icon" style={{ background: f.color, borderRadius: 12 }}>
                   <i className={f.icon}></i>
                 </div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -120,7 +127,7 @@ export default function HomePage() {
             {[
               { title: '정보처리기사', desc: '4년제 졸업자 또는 관련 경력자를 위한 국가기술자격', tags: ['5과목', '필기+실기'], path: '/written-exam', icon: 'fa-solid fa-user-graduate', color: '#3B82F6' },
               { title: '정보처리산업기사', desc: '전문대 졸업자 또는 관련 경력자를 위한 산업기사', tags: ['4과목', '필기+실기'], path: '/written-exam', icon: 'fa-solid fa-industry', color: '#2563EB' },
-              { title: '프로그래밍기능사', desc: '프로그래밍 기초를 위한 기능사 자격증', tags: ['필기', '실기(코딩)'], path: '/coding-lab', icon: 'fa-solid fa-keyboard', color: '#1D4ED8' },
+              { title: '프로그래밍기능사', desc: '알고리즘 · 순서도 14패턴부터 차근차근 시작하는 첫 자격증', tags: ['필기', '실기'], path: '/written-exam', icon: 'fa-solid fa-keyboard', color: '#1D4ED8' },
             ].map(p => (
               <Link to={p.path} className="path-card" key={p.title}>
                 <div className="path-card-icon" style={{ background: p.color, borderRadius: 12 }}>
