@@ -978,5 +978,130 @@ FOREIGN KEY (부서번호) REFERENCES 부서(부서번호) ON DELETE CASCADE 처
 | 인덱스 | 조회 빠름 vs 갱신 느림·공간 추가 — 장단점 세트 암기 |
 `,
     },
+    {
+      id: 'sql-9',
+      name: '집합 연산자와 TCL',
+      topics: ['UNION·UNION ALL', 'INTERSECT·EXCEPT(MINUS)', 'COMMIT·ROLLBACK·SAVEPOINT', 'TRUNCATE vs DELETE vs DROP'],
+      content: `## 집합 연산자와 TCL
+
+두 SELECT 결과를 수학의 집합처럼 합치거나 비교하는 것이 **집합 연산자(Set Operator)** 입니다. 결과가 몇 행인지 세는 문제와, 작업을 되돌리는 **TCL(Transaction Control Language)** 추적 문제가 단골로 출제됩니다.
+
+### 집합 연산자 네 가지
+
+두 SELECT는 **컬럼 개수와 자료형이 서로 맞아야** 연결할 수 있습니다.
+
+- **UNION**: 합집합. 두 결과를 합치고 **중복 행은 한 번만** 남깁니다.
+- **UNION ALL**: 합집합이지만 **중복을 제거하지 않고 전부** 보여줍니다.
+- **INTERSECT**: 교집합. **양쪽에 모두 있는** 행만 남깁니다.
+- **EXCEPT(오라클은 MINUS)**: 차집합. **앞 결과에만 있고 뒤 결과에는 없는** 행만 남깁니다.
+
+### 결과 행 수 세는 법 (실기 최빈출)
+
+A의 결과가 (1, 2, 3), B의 결과가 (2, 3, 4)일 때:
+
+| 연산 | 결과 | 행 수 |
+|---|---|---|
+| A UNION B | 1, 2, 3, 4 | 4행 |
+| A UNION ALL B | 1, 2, 3, 2, 3, 4 | 6행 |
+| A INTERSECT B | 2, 3 | 2행 |
+| A EXCEPT B | 1 | 1행 |
+
+- UNION ALL의 행 수는 언제나 **A 행 수 + B 행 수**입니다. 덧셈만 하면 됩니다.
+- UNION은 중복을 빼므로 겹치는 행 수만큼 줄어듭니다. "ALL이 붙으면 전부 다"로 암기합니다.
+
+### TCL — 트랜잭션 제어 언어
+
+**트랜잭션(Transaction)** 은 "모두 성공하거나 모두 취소되어야 하는 작업 묶음"입니다. 게임의 저장 기능에 비유하면:
+
+- **COMMIT**: 지금까지의 변경을 **확정 저장**하는 세이브 버튼. 확정한 뒤에는 ROLLBACK으로 되돌릴 수 없습니다.
+- **ROLLBACK**: 마지막 COMMIT 시점으로 **전부 되돌리기**. 세이브 지점부터 다시 시작하는 것입니다.
+- **SAVEPOINT**: 트랜잭션의 **중간 저장 지점**. SAVEPOINT s1; 을 만든 뒤 ROLLBACK TO s1; 하면 s1 이후 작업만 취소되고 그 이전 작업은 남습니다.
+
+### TCL 추적 예시
+
+행 10개인 표에서 DELETE 3행 → SAVEPOINT s1 → DELETE 2행 → ROLLBACK TO s1 → COMMIT 순서로 실행하면:
+
+- ROLLBACK TO s1로 뒤의 2행 삭제만 취소되고, 앞의 3행 삭제는 그대로 남습니다.
+- COMMIT 후 최종 행 수는 **7행**입니다. 이런 단계별 추적이 계산 문제로 나옵니다.
+
+### TRUNCATE vs DELETE vs DROP 비교
+
+| 구분 | DELETE | TRUNCATE | DROP |
+|---|---|---|---|
+| 명령 분류 | DML | DDL | DDL |
+| 지우는 대상 | 행 (일부 선택 가능) | 모든 행 한꺼번에 | 테이블 구조까지 통째로 |
+| WHERE 절 | 사용 가능 | 사용 불가 | 사용 불가 |
+| ROLLBACK | 가능 (COMMIT 전) | 원칙적으로 불가 | 불가 |
+| 속도 | 상대적으로 느림 | 빠름 | 즉시 제거 |
+
+- 세 명령 중 **표 자체가 사라지는 것은 DROP뿐**이며, TRUNCATE는 빈 표가 남습니다.
+- "행만 지우고 되돌릴 수 있는 명령은?"의 답은 **DELETE**, "구조는 남기고 전체 행을 빠르게 비우는 DDL은?"의 답은 **TRUNCATE**입니다.
+
+### 출제 포인트
+
+| 포인트 | 내용 |
+|---|---|
+| UNION vs UNION ALL | 중복 제거 여부 — ALL은 두 행 수의 단순 합 |
+| INTERSECT / EXCEPT | 교집합 / 차집합, 오라클 차집합은 MINUS |
+| TCL 3형제 | COMMIT 확정, ROLLBACK 되돌리기, SAVEPOINT 중간 지점 |
+| ROLLBACK TO | 지정한 SAVEPOINT 이후 작업만 취소 |
+| TRUNCATE·DELETE·DROP | DML/DDL 구분, WHERE·ROLLBACK 가능 여부 비교표 암기 |
+`,
+    },
+    {
+      id: 'sql-10',
+      name: '조인 심화와 권한 옵션',
+      topics: ['세타·동등·자연·CROSS 조인', 'ORDER BY', 'COUNT(DISTINCT)', 'WITH CHECK OPTION', 'GRANT WITH GRANT OPTION', 'REVOKE CASCADE·RESTRICT'],
+      content: `## 조인 심화와 권한 옵션
+
+JOIN 챕터의 INNER·OUTER 구분과 별개로, 시험은 조인을 **이론 명칭 체계**로도 묻습니다. 여기에 정렬, 중복 없는 집계, 뷰·권한의 세부 옵션까지 단답형 단골을 모았습니다.
+
+### 조인의 이론 명칭 체계
+
+- **세타 조인(Theta Join)**: 두 테이블을 =, >, < 같은 **임의의 비교 연산자**로 연결하는 가장 넓은 개념입니다.
+- **동등 조인(Equi Join)**: 세타 조인 중 **등호(=)** 를 쓰는 조인. 실무 조인의 대부분이며, 연결에 쓴 컬럼이 결과에 양쪽 모두 나타납니다.
+- **자연 조인(Natural Join)**: 동등 조인에서 **중복되는 연결 컬럼을 한 번만** 남긴 것. NATURAL JOIN 키워드는 ON 없이 같은 이름의 컬럼끼리 자동 연결합니다.
+- **교차 조인(CROSS JOIN)**: 조건 없이 **모든 행의 조합**을 만드는 카티션 곱(Cartesian Product)입니다. 3행과 4행을 교차 조인하면 결과는 **12행** — 두 행 수의 곱입니다.
+- 포함 관계로 암기합니다: 세타가 가장 넓고, 그 안에 동등, 그 안에 자연 조인이 있습니다. "비교 전부 → 등호만 → 등호에 중복 제거까지" 순서로 좁아집니다.
+
+### ORDER BY — 정렬
+
+- 기본형: SELECT ~ FROM ~ **ORDER BY** 컬럼 ASC 또는 DESC;
+- **ASC**는 오름차순(작은 값부터), **DESC**는 내림차순(큰 값부터)이며 **생략하면 ASC**입니다.
+- 여러 기준: ORDER BY 부서 ASC, 급여 DESC — 부서로 먼저 정렬하고, 같은 부서 안에서는 급여 내림차순입니다.
+- ORDER BY는 SELECT문의 **맨 마지막 절**이며, 논리적 실행 순서로도 가장 나중입니다.
+- 컬럼 이름 대신 SELECT 목록의 순번을 쓸 수도 있습니다. ORDER BY 2 DESC는 두 번째 컬럼 기준 내림차순입니다.
+
+### COUNT(DISTINCT) — 중복 없이 세기
+
+- COUNT(*)는 **행 전체 수**(NULL 포함), COUNT(컬럼)은 그 컬럼이 **NULL이 아닌 행 수**를 셉니다.
+- **COUNT(DISTINCT 컬럼)** 은 중복을 제거한 **서로 다른 값의 개수**입니다.
+- 부서 컬럼 값이 (영업, 영업, 인사, NULL)일 때: COUNT(*)는 4, COUNT(부서)는 3, COUNT(DISTINCT 부서)는 **2**입니다. 세 값을 한 문제에서 같이 묻습니다.
+
+### WITH CHECK OPTION — 뷰의 조건 자물쇠
+
+- 형태: CREATE VIEW 영업뷰 AS SELECT ~ WHERE 부서 = '영업' **WITH CHECK OPTION**;
+- 뷰를 통해 INSERT·UPDATE할 때 **뷰의 WHERE 조건을 위반하는 변경을 막는** 옵션입니다.
+- 예를 들어 영업뷰를 통해 부서를 '인사'로 UPDATE하려 하면 조건 위반으로 **오류**가 납니다. 창문(뷰) 밖으로 사라지게 만드는 수정을 잠그는 자물쇠입니다.
+
+### 권한 옵션 정리 — GRANT·REVOKE 심화
+
+- **GRANT ~ TO kim WITH GRANT OPTION**: kim이 받은 권한을 **제3자에게 다시 부여**할 수 있게 합니다.
+- **REVOKE ~ FROM kim CASCADE**: kim의 권한을 뺏으면서, kim이 **재부여해 준 다른 사용자의 권한까지 연쇄적으로** 회수합니다.
+- **REVOKE ~ FROM kim RESTRICT**: kim이 재부여한 권한이 **남아 있으면 회수를 거부(실패)** 합니다. 연쇄 회수를 막는 안전장치입니다.
+- 서술 비교: CASCADE는 "딸린 것까지 모두 회수", RESTRICT는 "딸린 것이 있으면 실행 자체를 취소"입니다.
+
+### 출제 포인트
+
+| 포인트 | 내용 |
+|---|---|
+| 조인 명칭 | 세타(임의 비교) → 동등(=) → 자연(중복 컬럼 제거) 순으로 좁아짐 |
+| CROSS JOIN | 카티션 곱, 결과 행 수 = 두 테이블 행 수의 곱 |
+| ORDER BY | ASC 기본·DESC 내림차순, 항상 맨 마지막 절 |
+| COUNT 3종 | COUNT(*) 전체, COUNT(컬럼) NULL 제외, COUNT(DISTINCT) 고유값 |
+| WITH CHECK OPTION | 뷰의 WHERE 조건을 위반하는 갱신 차단 |
+| CASCADE vs RESTRICT | 연쇄 회수 vs 재부여 권한 존재 시 회수 거부 |
+`,
+    },
   ],
 }
