@@ -25,9 +25,9 @@ export const certTypes = {
     name: '정보처리산업기사',
     description: '국가기술자격 정보처리 분야 산업기사급',
     subjects: [
-      { id: 'info-sys', name: '정보시스템 기반 기술', chapters: 4 },
-      { id: 'programming', name: '프로그래밍 언어 활용', chapters: 4 },
-      { id: 'db', name: '데이터베이스 활용', chapters: 4 },
+      { id: 'info-sys', name: '정보시스템 기반 기술', chapters: 12 },
+      { id: 'programming', name: '프로그래밍 언어 활용', chapters: 10 },
+      { id: 'db', name: '데이터베이스 활용', chapters: 12 },
       { id: 'info-comm', name: '정보통신 활용', chapters: 4 },
     ],
   },

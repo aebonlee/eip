@@ -330,6 +330,351 @@ int main(void) {
       explanation:
         'C의 문자열은 끝에 보이지 않는 널 문자(\\0)가 붙어 있고, strlen은 \\0 직전까지의 글자 수를 셉니다. (1) "Republic"은 8글자이므로 strlen(s)=8. (2) strcpy(t, s)는 s의 내용(\\0 포함)을 t에 통째로 복사합니다. (3) t[3] = \'\\0\' 으로 4번째 칸에 널 문자를 심으면, 뒤에 ublic이 메모리에 남아 있어도 문자열은 그 앞에서 끝난 것으로 취급됩니다. 그래서 strlen(t)=3이 되고 %s로 찍으면 Rep까지만 출력됩니다. 결과는 8 3 Rep입니다.',
     },
+    // ── 이하: 대표 저작 문제집 「필수 코드 57문제」 수록분 (2026-07-18 반영, 실행 검증 완료) ──
+    {
+      id: 'c-r16',
+      topic: '배열과 포인터',
+      difficulty: 'medium',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char* argv[]) {
+    char str1[20] = "KOREA";
+    char str2[20] = "LOVE";
+    char* p1 = NULL;
+    char* p2 = NULL;
+    p1 = str1;
+    p2 = str2;
+    str1[1] = p2[2];
+    str2[3] = p1[4];
+    strcat(str1, str2);
+    printf("%c", *(p1 + 2));
+    return 0;
+}`,
+      answer: 'R',
+      alternativeAnswers: ['r'],
+      explanation:
+        '문자 배열과 포인터가 섞인 문제는 배열 그림을 그려 놓고 한 줄씩 따라가면 됩니다. p1은 str1("KOREA")을, p2는 str2("LOVE")를 가리킵니다. (1) str1[1] = p2[2] : p2[2]는 str2의 세 번째 글자 V이므로 str1은 KVREA가 됩니다. (2) str2[3] = p1[4] : p1[4]는 str1의 다섯 번째 글자 A이므로 str2는 LOVA가 됩니다. (3) strcat(str1, str2)는 str1 뒤에 str2를 이어 붙여 KVREALOVA를 만듭니다. (4) *(p1 + 2)는 str1의 시작에서 두 칸 뒤, 즉 str1[2]의 값입니다. 세 번째 글자는 R이므로 R이 출력됩니다.',
+    },
+    {
+      id: 'c-r17',
+      topic: '배열과 포인터',
+      difficulty: 'hard',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[]) {
+    int arr[2][3] = { 1, 2, 3, 4, 5, 6 };
+    int (*p)[3] = NULL;
+    p = arr;
+    printf("%d, ", *(p[0] + 1) + *(p[1] + 2));
+    printf("%d", *(*(p + 1) + 0) + *(*(p + 1) + 1));
+    return 0;
+}`,
+      answer: '8, 9',
+      alternativeAnswers: ['8,9', '8 9'],
+      explanation:
+        'int (*p)[3]은 "3개짜리 행을 통째로 가리키는 포인터"로, 2차원 배열 arr을 행 단위로 이동할 때 씁니다. p = arr 이후 p[0]은 1행(1,2,3)의 시작, p[1]은 2행(4,5,6)의 시작 주소입니다. (1) *(p[0]+1)은 1행의 두 번째 값 2, *(p[1]+2)는 2행의 세 번째 값 6이므로 2+6=8을 출력하고 쉼표와 공백을 붙입니다. (2) *(p+1)은 p[1]과 같은 뜻(2행의 시작)이므로 *(*(p+1)+0)은 4, *(*(p+1)+1)은 5이고 4+5=9를 출력합니다. 최종 출력은 8, 9입니다.',
+    },
+    {
+      id: 'c-r18',
+      topic: '배열과 포인터',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(void) {
+    static int b[9] = { 1, 2, 3 };
+    printf("%d", b[5]);
+    return 0;
+}`,
+      answer: '0',
+      alternativeAnswers: [],
+      explanation:
+        'static을 붙인 정적 배열은 초기값을 다 채우지 않으면 나머지 요소가 자동으로 0으로 초기화됩니다. b는 9칸짜리 배열인데 1, 2, 3만 지정했으므로 b[0]=1, b[1]=2, b[2]=3이고 b[3]부터 b[8]까지는 전부 0입니다. 따라서 b[5]의 값은 0입니다. 참고로 초기값을 하나라도 지정하면 일반 배열도 나머지 칸은 0으로 채워지지만, 아무 초기화도 하지 않은 일반(auto) 배열에는 쓰레기값이 들어 있다는 차이를 기억해 두세요.',
+    },
+    {
+      id: 'c-r19',
+      topic: '배열과 포인터',
+      difficulty: 'medium',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    int a[2][2] = {{11, 22}, {44, 55}};
+    int i, sum = 0;
+    int *p;
+    p = a[0];
+    for (i = 1; i < 4; i++)
+        sum += *(p + i);
+    printf("%d", sum);
+    return 0;
+}`,
+      answer: '121',
+      alternativeAnswers: [],
+      explanation:
+        '2차원 배열도 메모리에는 11, 22, 44, 55가 한 줄로 이어져 저장됩니다. p = a[0]으로 p는 첫 요소 a[0][0](11)을 가리키고, p+1은 22, p+2는 44, p+3은 55를 가리킵니다. for문에서 i가 1, 2, 3으로 변하며 sum에 *(p+i)를 누적하면 0+22=22 → 22+44=66 → 66+55=121이 됩니다. i가 4가 되면 조건 i<4가 거짓이라 종료되고 121이 출력됩니다. 첫 요소 11은 i가 1부터 시작해서 더해지지 않는다는 점이 함정입니다.',
+    },
+    {
+      id: 'c-r20',
+      topic: '연산자',
+      difficulty: 'medium',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    for (a = 0; a < 2; a++)
+        for (b = 0; b < 2; b++)
+            printf("%d", !a && !b);
+    return 0;
+}`,
+      answer: '1000',
+      alternativeAnswers: ['1 0 0 0'],
+      explanation:
+        '!a && !b 는 "a도 0이고 b도 0일 때만 1"인 식입니다. 이중 for문으로 (a,b)가 (0,0) → (0,1) → (1,0) → (1,1) 순서로 바뀌며 값을 출력하면 (0,0)일 때만 1이고 나머지는 전부 0이라 1000이 출력됩니다. 드모르간 법칙에 의해 !a && !b 는 !(a || b)와 완전히 같은 식이라는 것이 이 문제의 원래 출제 포인트입니다. 헷갈리면 이렇게 들어갈 수 있는 값을 전부 대입한 진리표를 만들어 비교하면 됩니다.',
+    },
+    {
+      id: 'c-r21',
+      topic: '연산자',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    char a;
+    a = 'A' + 1;
+    printf("%d", a);
+    return 0;
+}`,
+      answer: '66',
+      alternativeAnswers: [],
+      explanation:
+        "문자는 메모리에 저장될 때 문자 그대로가 아니라 해당 문자의 아스키 코드 값(숫자)으로 저장됩니다. 'A'는 65이므로 a = 'A' + 1 은 65 + 1 = 66이 저장됩니다. printf에서 %d로 출력하면 숫자 그대로 66이 나옵니다. 만약 %c로 출력했다면 66번 문자인 'B'가 나왔을 것입니다. 같은 값이라도 서식 문자(%d/%c)에 따라 숫자로도, 문자로도 보인다는 것이 핵심입니다.",
+    },
+    {
+      id: 'c-r22',
+      topic: '조건문·반복문',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(void) {
+    int i;
+    int sum = 0;
+    for (i = 1; i <= 10; i = i + 2)
+        sum = sum + i;
+    printf("%d", sum);
+    return 0;
+}`,
+      answer: '25',
+      alternativeAnswers: [],
+      explanation:
+        'i가 1부터 2씩 증가하므로 i는 1, 3, 5, 7, 9로 변하며 sum에 누적됩니다: 0+1=1 → 1+3=4 → 4+5=9 → 9+7=16 → 16+9=25. i가 11이 되면 조건 i<=10이 거짓이라 반복이 끝나고, 1부터 10까지 홀수의 합인 25가 출력됩니다.',
+    },
+    {
+      id: 'c-r23',
+      topic: '연산자',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    int a = 4;
+    int b = 7;
+    int c = a | b;
+    printf("%d", c);
+    return 0;
+}`,
+      answer: '7',
+      alternativeAnswers: [],
+      explanation:
+        '|(비트 OR)는 두 수를 2진수로 놓고 자리마다 "하나라도 1이면 1"로 계산하는 비트 연산자입니다. 4는 2진수로 0100, 7은 0111이므로 0100 | 0111 = 0111 = 7입니다. 따라서 c에 7이 저장되어 7이 출력됩니다. 만약 &(비트 AND)였다면 두 자리가 모두 1인 곳만 남아 0100 & 0111 = 0100 = 4가 됩니다.',
+    },
+    {
+      id: 'c-r24',
+      topic: '구조체·문자열',
+      difficulty: 'hard',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+struct st {
+    int a;
+    int c[10];
+};
+
+int main(int argc, char* argv[]) {
+    int i = 0;
+    struct st ob1;
+    struct st ob2;
+    ob1.a = 0;
+    ob2.a = 0;
+    for (i = 0; i < 10; i++) {
+        ob1.c[i] = i;
+        ob2.c[i] = ob1.c[i] + i;
+    }
+    for (i = 0; i < 10; i = i + 2) {
+        ob1.a = ob1.a + ob1.c[i];
+        ob2.a = ob2.a + ob2.c[i];
+    }
+    printf("%d", ob1.a + ob2.a);
+    return 0;
+}`,
+      answer: '60',
+      alternativeAnswers: [],
+      explanation:
+        '구조체 st는 정수 a와 10칸 배열 c를 가진 상자이고, ob1과 ob2는 각각 독립된 상자입니다. 첫 번째 for문(i 0~9)에서 ob1.c[i] = i 이므로 ob1.c는 0~9가 되고, ob2.c[i] = ob1.c[i] + i = i + i 이므로 ob2.c는 0, 2, 4, ..., 18(짝수)이 됩니다. 두 번째 for문은 i가 0, 2, 4, 6, 8일 때만 누적합니다. ob1.a = 0+2+4+6+8 = 20, ob2.a = 0+4+8+12+16 = 40. 합계 20+40 = 60이 출력됩니다.',
+    },
+    {
+      id: 'c-r25',
+      topic: '배열과 포인터',
+      difficulty: 'hard',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(void) {
+    int n = 4;
+    int* pt = NULL;
+    pt = &n;
+    printf("%d", &n + *pt - *&pt + n);
+    return 0;
+}`,
+      answer: '8',
+      alternativeAnswers: [],
+      explanation:
+        '겉보기에 어렵지만 같은 항끼리 상쇄시키면 간단해집니다. pt = &n이므로 *&pt는 pt 자신, 즉 &n과 같은 주소입니다. 식 &n + *pt - *&pt + n을 차례로 보면 (1) &n + *pt 는 주소 &n에 *pt(n의 값 4)를 더한 것이고, (2) 여기서 *&pt(= &n)를 빼면 주소끼리 상쇄되어 더했던 4만 남습니다. (3) 마지막으로 n의 값 4를 더하면 4 + 4 = 8이 출력됩니다. 포인터 식이 길면 같은 주소끼리 소거해 보는 것이 요령입니다.',
+    },
+    {
+      id: 'c-r26',
+      topic: '연산자',
+      difficulty: 'medium',
+      question: '정수 변수 a, b에 각각 1, 2가 저장되어 있을 때, 다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(void) {
+    int a = 1, b = 2;
+    printf("%d", a < b + 2 && a << 1 <= b);
+    return 0;
+}`,
+      answer: '1',
+      alternativeAnswers: [],
+      explanation:
+        '연산자 우선순위 문제입니다. 산술(+) → 시프트(<<) → 관계(<, <=) → 논리(&&) 순서로 계산됩니다. (1) b + 2 = 4. (2) a << 1 : 1을 왼쪽으로 1비트 밀면 2배가 되어 2. (3) a < 4 → 1 < 4 는 참(1). (4) 2 <= b → 2 <= 2 는 참(1). (5) 1 && 1 은 둘 다 참이므로 1. 그래서 1이 출력됩니다. <<(시프트)가 <=(관계)보다 우선순위가 높다는 것을 모르면 풀 수 없는 문제입니다.',
+    },
+    {
+      id: 'c-r27',
+      topic: '배열과 포인터',
+      difficulty: 'medium',
+      question: 'a[0]의 주소가 10일 때, 다음 C 프로그램의 출력 결과를 쓰시오. (단, int형의 크기는 4Byte로 가정한다.)',
+      code: `#include <stdio.h>
+
+int main(int argc, char* argv[]) {
+    int a[] = { 14, 22, 30, 38 };
+    printf("%u, ", &a[2]);
+    printf("%u", a);
+    return 0;
+}`,
+      answer: '18, 10',
+      alternativeAnswers: ['18,10', '18 10'],
+      explanation:
+        '배열 이름 a는 배열의 시작 주소(= a[0]의 주소 = 10)입니다. int가 4Byte이므로 각 요소의 주소는 10, 14, 18, 22가 됩니다. (1) &a[2]는 세 번째 요소의 주소이므로 10 + 4×2 = 18이 먼저 출력되고 쉼표와 공백이 붙습니다. (2) a는 시작 주소 10이 출력됩니다. 그래서 18, 10입니다. 요소의 값(30)이 아니라 주소를 묻고 있으며, 주소는 "몇 번째 칸인가 × 자료형 크기"만큼 커진다는 것이 포인트입니다.',
+    },
+    {
+      id: 'c-r28',
+      topic: '연산자',
+      difficulty: 'medium',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+
+int main(int argc, char* argv[]) {
+    int n1 = 1, n2 = 2, n3 = 3;
+    int r1, r2, r3;
+    r1 = (n2 <= 2) || (n3 > 3);
+    r2 = !n3;
+    r3 = (n1 > 1) && (n2 < 3);
+    printf("%d", r3 - r2 + r1);
+    return 0;
+}`,
+      answer: '1',
+      alternativeAnswers: [],
+      explanation:
+        'C에서 관계·논리 연산의 결과는 참이면 1, 거짓이면 0입니다. (1) r1 = (n2 <= 2) || (n3 > 3) : 2<=2는 참, 3>3은 거짓인데 ||는 하나만 참이어도 참이므로 r1=1. (2) r2 = !n3 : n3의 값 3은 0이 아니므로 참이고, 그 부정은 거짓이라 r2=0. (3) r3 = (n1 > 1) && (n2 < 3) : 1>1이 거짓이므로 &&는 전체가 거짓이 되어 r3=0. 최종적으로 r3 - r2 + r1 = 0 - 0 + 1 = 1이 출력됩니다.',
+    },
+    {
+      id: 'c-r29',
+      topic: '구조체·문자열',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+    char str[50] = "nation";
+    char *p2 = "alter";
+    strcat(str, p2);
+    printf("%s", str);
+    return 0;
+}`,
+      answer: 'nationalter',
+      alternativeAnswers: [],
+      explanation:
+        'strcat(A, B)는 A 문자열의 끝에 B 문자열을 이어 붙이는 함수입니다. str에는 "nation"이 들어 있고, 포인터 p2는 문자열 "alter"가 저장된 곳을 가리킵니다. strcat(str, p2)를 실행하면 str은 "nationalter"가 되고, %s로 출력하면 nationalter가 나옵니다. str 배열이 50칸이라 이어 붙일 공간이 충분하다는 것도 확인해 두면 좋습니다.',
+    },
+    {
+      id: 'c-r30',
+      topic: '조건문·반복문',
+      difficulty: 'easy',
+      question: '다음 C 프로그램의 출력 결과를 쓰시오.',
+      code: `#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[]) {
+    int i = 0;
+    while (1) {
+        if (i == 4) {
+            break;
+        }
+        ++i;
+    }
+    printf("i = %d", i);
+    return 0;
+}`,
+      answer: 'i = 4',
+      alternativeAnswers: ['i=4', '4'],
+      explanation:
+        'while(1)은 조건이 항상 참이라 무한 반복하며, break만이 탈출구입니다. i가 0에서 시작해 ++i로 1씩 증가하다가, i가 4가 되는 순간 if (i == 4)가 참이 되어 break로 반복문을 빠져나옵니다. 반복 안에서 i는 0 → 1 → 2 → 3 → 4로 변했고, 탈출 후 printf가 "i = "라는 글자와 i의 값을 이어서 출력하므로 결과는 i = 4입니다.',
+    },
+    {
+      id: 'c-r31',
+      topic: '조건문·반복문',
+      difficulty: 'medium',
+      question: "다음 C 프로그램을 실행하고 'c'를 입력했을 때의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+
+int main(void) {
+    char ch;
+    scanf("%c", &ch);
+    switch (ch) {
+    case 'a':
+        printf("one ");
+    case 'b':
+        printf("two ");
+    case 'c':
+        printf("three ");
+        break;
+    case 'd':
+        printf("four ");
+        break;
+    }
+    return 0;
+}`,
+      answer: 'three',
+      alternativeAnswers: ['three '],
+      explanation:
+        "switch문의 핵심은 break가 없으면 아래 case로 계속 흘러내린다(fall through)는 것입니다. 입력한 'c'에 해당하는 case 'c'로 바로 점프해 three를 출력하고, 바로 다음의 break를 만나 switch를 벗어납니다. 만약 'a'를 입력했다면 case 'a'부터 시작해 break가 나올 때까지 one two three가 모두 출력되었을 것입니다. 여기서는 'c'로 진입했으므로 three만 출력됩니다.",
+    },
   ],
 }
 
@@ -707,6 +1052,203 @@ public class Main {
       alternativeAnswers: [],
       explanation:
         '인터페이스 Calc 타입 배열에 Add 객체와 Mul 객체가 순서대로 들어 있습니다. run(op, ...)에서 op.apply를 부르면, 인터페이스 타입이라도 "실제 객체"의 apply가 실행됩니다(다형성). (1) 첫 반복: op는 Add, r=0이므로 run(Add, 0+2, 3) → 2+3 = 5, r=5. (2) 두 번째 반복: op는 Mul, run(Mul, 5+2, 3) → 7×3 = 21, r=21. 앞 반복의 결과 r이 다음 반복의 입력(r+2)으로 이어지는 점까지 놓치지 않아야 합니다. 최종 출력은 21입니다.',
+    },
+    // ── 이하: 대표 저작 문제집 「필수 코드 57문제」 수록분 (2026-07-18 반영, 실행 검증 완료) ──
+    {
+      id: 'java-r16',
+      topic: '연산자·형변환',
+      difficulty: 'easy',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        int i = 7, j = 9;
+        int k;
+        k = (i > j) ? (i - j) : (i + j);
+        System.out.println(k);
+    }
+}`,
+      answer: '16',
+      alternativeAnswers: [],
+      explanation:
+        '삼항 조건 연산자는 "조건 ? 참일 때 값 : 거짓일 때 값" 형태로, if~else를 한 줄로 줄인 것입니다. 이 코드는 if (i > j) k = i - j; else k = i + j; 와 완전히 같은 뜻입니다. i=7, j=9에서 조건 i > j 는 7 > 9로 거짓이므로 콜론(:) 뒤의 식 i + j 가 선택되어 k = 7 + 9 = 16이 저장되고, 16이 출력됩니다.',
+    },
+    {
+      id: 'java-r17',
+      topic: '배열·문자열',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class ovr {
+    public static void main(String[] args) {
+        int arr[];
+        int i = 0;
+        arr = new int[10];
+        arr[0] = 0;
+        arr[1] = 1;
+        while (i < 8) {
+            arr[i + 2] = arr[i + 1] + arr[i];
+            i++;
+        }
+        System.out.println(arr[9]);
+    }
+}`,
+      answer: '34',
+      alternativeAnswers: [],
+      explanation:
+        '피보나치 수열을 배열로 만드는 코드입니다. arr[0]=0, arr[1]=1에서 시작해, arr[i+2] = arr[i+1] + arr[i] 로 "앞의 두 값을 더해 다음 값"을 채웁니다. i가 0부터 7까지 8번 반복하면 배열은 0, 1, 1, 2, 3, 5, 8, 13, 21, 34가 됩니다. 마지막 요소 arr[9]의 값은 34이므로 34가 출력됩니다. 표를 그려 한 칸씩 채우면 실수 없이 풀 수 있습니다.',
+    },
+    {
+      id: 'java-r18',
+      topic: '배열·문자열',
+      difficulty: 'medium',
+      question: '다음 Java 코드 출력문의 결과를 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("5 + 2 = " + 3 + 4);
+        System.out.println("5 + 2 = " + (3 + 4));
+    }
+}`,
+      answer: '5 + 2 = 34\n5 + 2 = 7',
+      alternativeAnswers: ['5 + 2 = 34 5 + 2 = 7', '5+2=34 5+2=7'],
+      explanation:
+        'Java에서 + 는 "숫자+숫자"면 덧셈, "문자열+숫자"면 이어붙이기이며, 계산은 왼쪽부터 진행됩니다. (1) 첫 줄: "5 + 2 = " + 3 은 문자열에 숫자를 붙인 것이라 "5 + 2 = 3"이라는 문자열이 되고, 여기에 + 4 도 이어붙이기가 되어 5 + 2 = 34가 출력됩니다. (2) 둘째 줄: (3 + 4)는 괄호 덕분에 먼저 숫자 덧셈이 되어 7이고, "5 + 2 = " + 7 이라 5 + 2 = 7이 출력됩니다. 괄호 하나가 결과를 완전히 바꾸는 문제입니다.',
+    },
+    {
+      id: 'java-r19',
+      topic: '배열·문자열',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Ape {
+    static void rs(char a[]) {
+        for (int i = 0; i < a.length; i++)
+            if (a[i] == 'B')
+                a[i] = 'C';
+            else if (i == a.length - 1)
+                a[i] = a[i - 1];
+            else a[i] = a[i + 1];
+    }
+    static void pca(char a[]) {
+        for (int i = 0; i < a.length; i++)
+            System.out.print(a[i]);
+        System.out.println();
+    }
+    public static void main(String[] args) {
+        char c[] = {'A', 'B', 'D', 'D', 'A', 'B', 'C'};
+        rs(c);
+        pca(c);
+    }
+}`,
+      answer: 'BCDABCC',
+      alternativeAnswers: ['bcdabcc'],
+      explanation:
+        'rs 메소드는 배열을 0번 칸부터 순서대로 하나씩 바꿉니다. 규칙은 (1) 현재 칸이 B면 C로 바꾸고, (2) 마지막 칸이면 바로 왼쪽 값을 복사하고, (3) 그 외에는 바로 오른쪽 값을 복사합니다. 초기 배열 A B D D A B C에서 따라가면: 0번 A → 오른쪽 B 복사, 1번은 원래 B라서 C로, 2번 D → 오른쪽 D, 3번 D → 오른쪽 A, 4번 A → 오른쪽 B, 5번 B → C, 6번은 마지막이라 왼쪽 값 C 복사. 결과 배열은 B C D A B C C가 되고, pca가 전부 이어 출력해 BCDABCC입니다. 판단 기준은 항상 "지금 시점의 배열 값"이라는 점을 놓치지 않아야 합니다.',
+    },
+    {
+      id: 'java-r20',
+      topic: '조건문·반복문',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class ovr {
+    public static void main(String[] args) {
+        int a = 1, b = 2, c = 3, d = 4;
+        int mx, mn;
+        mx = a < b ? b : a;
+        if (mx == 1) {
+            mn = a > mx ? b : a;
+        }
+        else {
+            mn = b < mx ? d : c;
+        }
+        System.out.println(mn);
+    }
+}`,
+      answer: '3',
+      alternativeAnswers: [],
+      explanation:
+        '삼항 연산자와 if문이 섞인 문제는 값을 하나씩 확정하며 내려갑니다. (1) mx = a < b ? b : a : 1 < 2 는 참이므로 mx = b = 2. (2) if (mx == 1) : mx는 2라서 거짓이므로 else 블록으로 갑니다. (3) mn = b < mx ? d : c : 2 < 2 는 거짓("같다"는 "작다"가 아님)이므로 mn = c = 3. 그래서 3이 출력됩니다.',
+    },
+    {
+      id: 'java-r21',
+      topic: '배열·문자열',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Rarr {
+    static int[] marr() {
+        int temp[] = new int[4];
+        for (int i = 0; i < temp.length; i++)
+            temp[i] = i;
+        return temp;
+    }
+    public static void main(String[] args) {
+        int iarr[];
+        iarr = marr();
+        for (int i = 0; i < iarr.length; i++)
+            System.out.print(iarr[i] + " ");
+    }
+}`,
+      answer: '0 1 2 3',
+      alternativeAnswers: ['0 1 2 3 ', '0123'],
+      explanation:
+        'marr 메소드는 4칸짜리 배열 temp를 만들고 temp[i] = i 로 0, 1, 2, 3을 채운 뒤 배열을 반환합니다. Java에서 배열을 반환하면 배열의 시작 주소(참조)가 전달되어 iarr이 그 배열을 그대로 가리키게 됩니다. main의 for문이 iarr의 값을 공백 한 칸과 함께 차례로 출력하므로 결과는 0 1 2 3입니다. length가 4라서 인덱스 0~3까지만 도는 것도 확인 포인트입니다.',
+    },
+    {
+      id: 'java-r22',
+      topic: '조건문·반복문',
+      difficulty: 'easy',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class array1 {
+    public static void main(String[] args) {
+        int cnt = 0;
+        do {
+            cnt++;
+        } while (cnt < 0);
+        if (cnt == 1)
+            cnt++;
+        else
+            cnt = cnt + 3;
+        System.out.printf("%d", cnt);
+    }
+}`,
+      answer: '2',
+      alternativeAnswers: [],
+      explanation:
+        'do~while문은 조건을 나중에 검사하므로, 조건이 거짓이어도 본문을 최소 한 번은 실행합니다. cnt=0에서 do 블록의 cnt++로 cnt=1이 되고, 그다음 조건 cnt < 0 을 검사하는데 거짓이라 반복은 거기서 끝납니다. 이어지는 if (cnt == 1)은 참이므로 cnt++로 cnt=2가 되고, 2가 출력됩니다. "일단 한 번은 실행한다"가 do~while의 전부입니다.',
+    },
+    {
+      id: 'java-r23',
+      topic: '연산자·형변환',
+      difficulty: 'medium',
+      question: '다음 Java 프로그램의 출력 결과를 쓰시오.',
+      code: `public class Operator {
+    public static void main(String[] args) {
+        int x = 5, y = 0, z = 0;
+        y = x++;
+        z = --x;
+        System.out.print(x + ", " + y + ", " + z);
+    }
+}`,
+      answer: '5, 5, 5',
+      alternativeAnswers: ['5,5,5', '5 5 5'],
+      explanation:
+        '(1) y = x++ : 후위 증가라서 x의 현재 값 5를 y에 먼저 넣고 나서 x를 6으로 올립니다(x=6, y=5). (2) z = --x : 전위 감소라서 x를 먼저 5로 내린 뒤 그 값을 z에 넣습니다(x=5, z=5). (3) 출력은 x, y, z 순서이므로 5, 5, 5입니다. 증가했다가 다시 감소해서 x가 제자리 5로 돌아온다는 것이 이 문제의 포인트입니다.',
+    },
+    {
+      id: 'java-r24',
+      topic: '조건문·반복문',
+      difficulty: 'hard',
+      question: '다음 Java 프로그램을 실행하려고 할 때 어떤 결과가 나타나는지 쓰시오.',
+      code: `public class Main {
+    public static void main(String[] args) {
+        int x = 1, y = 6;
+        while (y--) {
+            x++;
+        }
+        System.out.println("x=" x + " y=" y);
+    }
+}`,
+      answer: '컴파일 오류가 발생한다',
+      alternativeAnswers: ['컴파일 오류', '컴파일 에러', '오류 발생', 'Unresolved compilation problem'],
+      explanation:
+        'Java와 C의 차이를 묻는 문제로, 이 코드는 컴파일 오류가 발생합니다. 오류는 두 곳입니다. (1) while (y--) : C에서는 0이 아니면 참으로 취급하지만, Java의 조건식은 반드시 boolean 타입이어야 하므로 int인 y--는 조건이 될 수 없습니다. (2) println("x=" x + " y=" y) : 문자열과 변수를 이을 때는 + 연산자가 필요한데 빠져 있어 문법 오류입니다. while (y-- > 0), "x=" + x + " y=" + y 로 고쳐야 실행되며, 고친 후의 결과는 x=7 y=-1이 됩니다.',
     },
   ],
 }
