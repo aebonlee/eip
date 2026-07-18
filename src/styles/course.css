@@ -1022,3 +1022,49 @@
     text-align: center;
   }
 }
+
+/* 정답 가림 자가 테스트 모드 */
+.answer-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  background: var(--bg-white);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.answer-toggle-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.answer-toggle-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.answer-blur {
+  filter: blur(6px);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 6px;
+  transition: filter 0.25s ease;
+}
+
+.answer-blur:hover {
+  filter: blur(4px);
+}
+
+.answer-blur.revealed {
+  filter: none;
+  cursor: default;
+  user-select: auto;
+}

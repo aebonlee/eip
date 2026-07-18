@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getCodingArea } from '../../data/coding-theory'
 import { getCertName } from '../../data/practical-exam-data'
-import MarkdownContent from '../../components/MarkdownContent'
+import MarkdownContent, { useHideAnswers, AnswerToggleButton } from '../../components/MarkdownContent'
 import { useStudyProgress } from '../../hooks/useStudyProgress'
 
 export default function CodingTheoryStudy() {
@@ -10,6 +10,7 @@ export default function CodingTheoryStudy() {
   const certName = getCertName(certType)
   const area = getCodingArea(areaId)
   const [activeChapter, setActiveChapter] = useState(0)
+  const [hideAnswers, toggleHideAnswers] = useHideAnswers()
   const { isCompleted, markCompleted, isLoggedIn } = useStudyProgress(certType)
 
   useEffect(() => {
@@ -82,7 +83,8 @@ export default function CodingTheoryStudy() {
             </div>
 
             {/* 본문 */}
-            <MarkdownContent content={current.content} />
+            <AnswerToggleButton hideAnswers={hideAnswers} onToggle={toggleHideAnswers} />
+            <MarkdownContent content={current.content} hideAnswers={hideAnswers} />
 
             {/* 학습 완료 체크 */}
             {isLoggedIn && (
