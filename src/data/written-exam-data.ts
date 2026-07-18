@@ -36,8 +36,8 @@ export const certTypes = {
     name: '프로그래밍기능사',
     description: '국가기술자격 프로그래밍 분야 기능사급',
     subjects: [
-      { id: 'programming-basic', name: '정보처리와 컴퓨터 일반', chapters: 3 },
-      { id: 'algorithm', name: '알고리즘', chapters: 3 },
+      { id: 'programming-basic', name: '정보처리와 컴퓨터 일반', chapters: 4 },
+      { id: 'algorithm', name: '알고리즘', chapters: 9 },
       { id: 'db-basic', name: '데이터베이스', chapters: 3 },
     ],
   },
